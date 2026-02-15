@@ -1,656 +1,425 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StyleForge · Unspoken Stage 2 Design Chooser</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;700&family=Manrope:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <title>Unspoken — Anonymous Secrets</title>
+  <meta name="description" content="A private space for the things you've never said out loud." />
+  <meta property="og:title" content="Unspoken" />
+  <meta property="og:description" content="Share anonymously. Connect safely. No names, no traces, no judgment." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --sf-primary: #6C63FF;
-      --sf-secondary: #3D5AFE;
-      --sf-accent: #B388FF;
-      --sf-bg: #08090f;
-      --sf-surface: #111425;
-      --sf-text: #edf1ff;
-      --sf-muted: #a2add6;
-      --sf-border: rgba(155,145,255,.26);
-      --sf-primary-gradient: linear-gradient(130deg, #6C63FF 0%, #3D5AFE 100%);
-      --sf-bg-mesh: radial-gradient(circle at 12% 16%, rgba(108,99,255,.32), transparent 34%), radial-gradient(circle at 88% 20%, rgba(61,90,254,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(179,136,255,.21), transparent 40%);
-      --sf-font-heading: 'Space Grotesk', sans-serif;
-      --sf-font-body: 'Inter', sans-serif;
-      --sf-heading-weight: 700;
-      --sf-card-radius: 20px;
-      --sf-btn-radius: 14px;
-      --sf-shadow: 0 18px 40px rgba(0,0,0,.36);
-      --sf-anim-speed: 240ms;
-      --sf-spacing: 1.14;
-      --sf-grid-gap: 22px;
-      --sf-card-padding: 28px;
-      --sf-top-border: linear-gradient(90deg, var(--sf-primary), var(--sf-secondary), var(--sf-accent));
-      --tab-glow: rgba(108,99,255,.45);
+      --bg: #08090f; --surface: #111425; --text: #edf1ff; --muted: #a2add6;
+      --primary: #6C63FF; --secondary: #3D5AFE; --accent: #B388FF;
+      --border: rgba(155,145,255,0.26); --gradient: linear-gradient(130deg, #6C63FF, #3D5AFE);
+      --font-heading: 'Space Grotesk', sans-serif; --font-body: 'Inter', sans-serif;
+      --card-radius: 20px; --btn-radius: 14px; --spacing: 1.14;
     }
-
     * { box-sizing: border-box; }
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: var(--sf-font-body);
-      color: var(--sf-text);
-      background: linear-gradient(180deg, #05060b, #090b14 46%, #090c14 100%);
-      overflow-x: hidden;
+      margin: 0; color: var(--text); background: radial-gradient(circle at 20% 10%, #101633 0%, transparent 30%), var(--bg);
+      font-family: var(--font-body); line-height: 1.6; overflow-x: hidden;
     }
+    .mesh {
+      position: fixed; inset: -20%; z-index: -3;
+      background: radial-gradient(circle at 15% 25%, rgba(108,99,255,.22), transparent 34%),
+                  radial-gradient(circle at 85% 20%, rgba(61,90,254,.22), transparent 30%),
+                  radial-gradient(circle at 65% 80%, rgba(179,136,255,.16), transparent 28%);
+      background-size: 160% 160%; animation: meshMove 18s ease-in-out infinite alternate;
+    }
+    @keyframes meshMove { from { background-position: 0% 0%; } to { background-position: 100% 70%; } }
+    .particles { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+    .particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: rgba(179,136,255,.5); animation: float 12s linear infinite; }
+    @keyframes float { 0% { transform: translateY(0) translateX(0); opacity:.2; } 50% { opacity:.65; } 100% { transform: translateY(-120px) translateX(20px); opacity:.1; } }
 
-    .page { max-width: 1260px; margin: 0 auto; padding: 20px 18px 56px; }
+    .container { width: min(1120px, 94vw); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px);
+      background: rgba(8,9,15,.72); border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .logo { font-family: var(--font-heading); font-size: 1.45rem; font-weight: 700; display: flex; gap: .5rem; align-items: center; }
+    .logo-lock { width: 18px; height: 18px; border: 2px solid var(--accent); border-radius: 5px; position: relative; opacity: .85; }
+    .logo-lock::before { content: ""; position: absolute; width: 8px; height: 6px; border: 2px solid var(--accent); border-bottom: none; border-radius: 10px 10px 0 0; left: 2px; top: -8px; }
+    .nav-right { display: flex; gap: .6rem; align-items: center; }
+    .linkish { color: var(--muted); font-weight: 600; }
+    button { border: none; color: var(--text); font-family: inherit; cursor: pointer; }
+    .btn { padding: .62rem .95rem; border-radius: var(--btn-radius); border: 1px solid var(--border); background: rgba(255,255,255,.03); }
+    .btn-primary { background: var(--gradient); box-shadow: 0 0 24px rgba(108,99,255,.35); }
+    .menu-btn { display: none; background: transparent; font-size: 1.3rem; color: var(--text); }
 
-    .tabs-wrap {
-      position: sticky; top: 8px; z-index: 60;
-      backdrop-filter: blur(10px);
-      background: rgba(7,9,15,.72);
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 16px; padding: 8px;
-      box-shadow: 0 10px 34px rgba(0,0,0,.3);
-    }
-    .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-    .tab {
-      border: 0; border-radius: 11px; cursor: pointer;
-      background: transparent; color: #d6defb; font-weight: 700; font-size: 13px;
-      letter-spacing: .01em; padding: 11px 8px 13px; transition: .2s ease;
-      position: relative;
-    }
-    .tab:hover { background: rgba(255,255,255,.06); color: #fff; }
-    .tab.active { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
-    .tab.active::after {
-      content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 3px; border-radius: 99px;
-      background: var(--sf-primary-gradient); box-shadow: 0 0 20px var(--tab-glow);
-    }
+    .hero { padding: 68px 0 28px; position: relative; }
+    .hero h1 { font-family: var(--font-heading); font-size: clamp(1.8rem, 4.5vw, 3.1rem); line-height: 1.15; max-width: 750px; margin: 0 0 12px; }
+    .hero p { color: var(--muted); margin: 0 0 18px; max-width: 680px; }
+    .stats { color: #cad2f8; font-weight: 600; margin-bottom: 18px; }
+    .cta { animation: pulse 2.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 22px rgba(108,99,255,.35);} 50% { box-shadow: 0 0 34px rgba(108,99,255,.55);} }
 
-    .preview-stage { position: relative; margin-top: 20px; min-height: 830px; }
-    .preview-panel {
-      position: absolute; inset: 0; opacity: 0; pointer-events: none;
-      transform: translateY(8px) scale(.997);
-      transition: opacity 300ms ease, transform 300ms ease;
+    .topics-wrap { margin: 10px 0 14px; overflow-x: auto; }
+    .topics { display: flex; gap: .6rem; min-width: max-content; }
+    .pill {
+      border: 1px solid var(--border); color: var(--muted); background: rgba(255,255,255,.03);
+      border-radius: 999px; padding: .45rem .8rem; font-weight: 600; transition: .25s;
     }
-    .preview-panel.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); z-index: 2; }
+    .pill.active { color: white; background: var(--gradient); border-color: transparent; }
 
-    .composition {
-      position: relative; overflow: hidden; isolation: isolate;
-      border-radius: 28px; border: 1px solid var(--sf-border);
-      background: var(--sf-bg); box-shadow: 0 28px 58px rgba(0,0,0,.35);
-      transform-style: preserve-3d;
-      transition: transform .4s ease;
-    }
-    .composition::before {
-      content: ""; position: absolute; inset: 0; background: var(--sf-bg-mesh); background-size: 180% 180%; z-index: 0;
-      animation: meshMove 16s ease-in-out infinite alternate;
-    }
-    .composition::after {
-      content: ""; position: absolute; inset: 0; z-index: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 32%, rgba(0,0,0,.16));
-      pointer-events: none;
-    }
-    .particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-    .particles i {
-      position: absolute; width: 4px; height: 4px; border-radius: 50%;
-      background: color-mix(in srgb, var(--sf-accent) 70%, white 30%);
-      opacity: .15; animation: drift var(--d, 14s) linear infinite; filter: blur(.2px);
-    }
+    .feed { column-count: 1; column-gap: 16px; padding-bottom: 110px; }
+    @media(min-width: 820px){ .feed { column-count: 2; } }
+    @media(min-width: 1120px){ .feed { column-count: 3; } }
 
-    .content { position: relative; z-index: 1; padding: calc(30px * var(--sf-spacing)); }
-    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 26px; align-items: center; margin-bottom: 24px; }
+    .card, .ad-card {
+      break-inside: avoid; background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border: 1px solid var(--border); border-radius: var(--card-radius); padding: 14px; margin: 0 0 16px;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      opacity: 0; transform: translateY(20px);
+    }
+    .card.visible, .ad-card.visible { opacity: 1; transform: translateY(0); transition: .45s ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(179,136,255,.8); box-shadow: 0 10px 30px rgba(108,99,255,.2); }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: .58rem; }
+    .user { display: flex; align-items: center; gap: .55rem; font-weight: 600; }
+    .avatar, .c-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); }
+    .time { color: var(--muted); font-size: .82rem; }
+    .secret-text {
+      margin: .2rem 0 .55rem; color: #f3f6ff; display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .read-more { color: var(--accent); font-size: .88rem; margin-bottom: .45rem; display: inline-block; }
+    .tag { font-size: .79rem; color: #d6dbff; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: .23rem .56rem; }
+    .reacts { display: flex; gap: 10px; margin-top: .62rem; }
+    .react { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 999px; padding: .22rem .62rem; font-size: .86rem; }
+    .bounce { animation: bounce .28s; }
+    @keyframes bounce { 50% { transform: scale(1.2);} }
 
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 7px 13px; border-radius: 999px;
-      font-size: 11px; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;
-      color: var(--sf-primary); border: 1px solid color-mix(in srgb, var(--sf-primary) 36%, transparent);
-      background: color-mix(in srgb, var(--sf-primary) 14%, transparent);
-      margin-bottom: 14px;
-    }
-    h1 {
-      margin: 0; font-size: clamp(42px, 6vw, 72px); line-height: .96;
-      font-family: var(--sf-font-heading); font-weight: var(--sf-heading-weight); letter-spacing: -.02em;
-      text-wrap: balance;
-    }
-    .subtitle { margin: 16px 0 24px; color: var(--sf-muted); font-size: clamp(16px, 2.1vw, 19px); line-height: 1.62; max-width: 62ch; }
+    .ad-card { background: linear-gradient(145deg, rgba(108,99,255,.18), rgba(61,90,254,.09)); }
+    .ad-badge { font-size: .73rem; color: #dcd8ff; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 2px 8px; display: inline-block; }
 
-    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn {
-      border-radius: var(--sf-btn-radius); border: 1px solid transparent; padding: 12px 16px;
-      font: 700 14px var(--sf-font-body); cursor: pointer; color: var(--sf-text);
-      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, filter var(--sf-anim-speed) ease, background var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
+    .modal-wrap { position: fixed; inset: 0; display: none; z-index: 80; background: rgba(4,4,10,.58); backdrop-filter: blur(6px); }
+    .modal-wrap.show { display: flex; align-items: flex-end; }
+    .modal {
+      width: min(760px, 100vw); max-height: 92vh; overflow: auto; margin: 0 auto;
+      background: #0f1327; border: 1px solid var(--border); border-radius: 24px 24px 0 0; padding: 16px;
+      animation: slideUp .26s ease;
     }
-    .btn:active { transform: translateY(1px); }
-    .btn-primary { background: var(--sf-primary-gradient); color: #fff; box-shadow: 0 10px 26px color-mix(in srgb, var(--sf-primary) 38%, transparent); }
-    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.07); }
-    .btn-secondary { background: color-mix(in srgb, var(--sf-surface) 90%, white 10%); border-color: var(--sf-border); }
-    .btn-secondary:hover { background: color-mix(in srgb, var(--sf-surface) 82%, white 18%); }
-    .btn-ghost {
-      background: color-mix(in srgb, var(--sf-surface) 48%, transparent);
-      border-color: color-mix(in srgb, var(--sf-text) 45%, transparent);
-      color: var(--sf-text);
+    @keyframes slideUp { from { transform: translateY(40px); opacity: .25;} to {transform: translateY(0); opacity:1;} }
+    .close { float: right; font-size: 1.25rem; background: transparent; color: var(--muted); }
+    .comments { margin-top: 12px; display: grid; gap: 10px; }
+    .comment { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; padding: 10px; }
+    .comment .head { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: .82rem; margin-bottom: 4px; }
+    .input-row { display: flex; gap: 8px; margin-top: 12px; }
+    input, textarea {
+      width: 100%; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.11);
+      color: var(--text); padding: .65rem .75rem; font-family: inherit;
     }
-    .btn-ghost:hover {
-      background: color-mix(in srgb, var(--sf-surface) 68%, transparent);
-      border-color: color-mix(in srgb, var(--sf-text) 62%, transparent);
+    textarea { min-height: 130px; resize: vertical; }
+    .switches { display: flex; gap: 12px; color: var(--muted); font-size: .9rem; margin: 10px 0; }
+    .toast {
+      position: fixed; left: 50%; transform: translateX(-50%); bottom: 86px; z-index: 90;
+      background: #151b38; border: 1px solid var(--border); padding: .58rem .9rem; border-radius: 12px; display:none;
     }
+    .toast.show { display:block; }
 
-    .device {
-      width: min(100%, 320px); margin-left: auto; border-radius: 30px; padding: 14px;
-      background: color-mix(in srgb, var(--sf-surface) 86%, black 14%);
-      border: 1px solid var(--sf-border); box-shadow: var(--sf-shadow);
-    }
+    .footer { border-top: 1px solid rgba(255,255,255,.08); margin-top: 18px; padding: 24px 0 95px; color: var(--muted); font-size: .92rem; }
+    .footer-links { display:flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
 
-    .features {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sf-grid-gap);
-      margin-bottom: 24px;
+    .fab {
+      position: fixed; right: 16px; bottom: 80px; z-index: 25;
+      border-radius: 999px; padding: .78rem 1rem; background: var(--gradient); box-shadow: 0 0 26px rgba(108,99,255,.45);
+      font-weight: 700;
     }
-    .card {
-      position: relative; overflow: hidden;
-      border-radius: var(--sf-card-radius); padding: var(--sf-card-padding);
-      background: color-mix(in srgb, var(--sf-surface) 88%, white 12%);
-      border: 1px solid var(--sf-border); box-shadow: var(--sf-shadow);
-      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
+    .bottom-nav {
+      position: fixed; left:0; right:0; bottom:0; z-index: 40; display:flex; justify-content:space-around;
+      background: rgba(8,9,15,.94); border-top: 1px solid rgba(255,255,255,.08); padding: .55rem 0 .68rem;
     }
-    .card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: var(--sf-top-border); opacity: 0; transition: opacity var(--sf-anim-speed) ease;
-    }
-    .card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--sf-primary) 50%, var(--sf-border)); box-shadow: 0 22px 46px color-mix(in srgb, var(--sf-primary) 22%, rgba(0,0,0,.3)); }
-    .card:hover::before { opacity: 1; }
-    .card.reveal { opacity: 0; transform: translateY(16px); }
-    .card.reveal.in { opacity: 1; transform: translateY(0); transition: 420ms ease; }
+    .bottom-nav button { background:none; color: var(--muted); font-size:.9rem; }
 
-    .icon-wrap {
-      width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 14px;
-      border-radius: calc(var(--sf-card-radius) * .56); border: 1px solid transparent;
+    .hidden-mobile { display: none; }
+    @media(min-width: 850px){
+      .bottom-nav, .fab { display:none; }
+      .hidden-mobile { display: inline-flex; }
+      .menu-btn { display: none; }
     }
-    .features .card:nth-child(1) .icon-wrap { background: color-mix(in srgb, var(--sf-primary) 14%, transparent); border-color: color-mix(in srgb, var(--sf-primary) 34%, transparent); }
-    .features .card:nth-child(2) .icon-wrap { background: color-mix(in srgb, var(--sf-secondary) 14%, transparent); border-color: color-mix(in srgb, var(--sf-secondary) 34%, transparent); }
-    .features .card:nth-child(3) .icon-wrap { background: color-mix(in srgb, var(--sf-accent) 14%, transparent); border-color: color-mix(in srgb, var(--sf-accent) 34%, transparent); }
-    .icon { width: 24px; height: 24px; }
-    .features .card:nth-child(1) .icon { color: var(--sf-primary); }
-    .features .card:nth-child(2) .icon { color: var(--sf-secondary); }
-    .features .card:nth-child(3) .icon { color: var(--sf-accent); }
-
-    .card h3 {
-      margin: 0 0 9px; font-size: 20px; line-height: 1.2;
-      font-family: var(--sf-font-heading); font-weight: min(calc(var(--sf-heading-weight) - 100), 700);
+    @media(max-width: 849px){
+      .nav-right .btn, .nav-right .linkish { display:none; }
+      .menu-btn { display:block; }
+      .modal { width: 100vw; max-height: 100vh; border-radius: 0; }
     }
-    .card p { margin: 0; color: var(--sf-muted); line-height: 1.55; }
-
-    .component-strip {
-      display: flex; flex-wrap: wrap; align-items: center; gap: 11px;
-      border-radius: calc(var(--sf-card-radius) - 4px); padding: 14px;
-      background: color-mix(in srgb, var(--sf-surface) 88%, white 12%);
-      border: 1px solid var(--sf-border); margin-bottom: 22px;
-    }
-    .mini-input {
-      min-width: 240px; border-radius: 10px; padding: 10px 12px; font: inherit;
-      border: 1px solid var(--sf-border);
-      color: var(--sf-text);
-      background: color-mix(in srgb, var(--sf-bg) 58%, white 42%);
-    }
-    .mini-input::placeholder { color: color-mix(in srgb, var(--sf-muted) 80%, transparent); }
-    .toggle {
-      width: 48px; height: 28px; border-radius: 99px; border: 1px solid var(--sf-border);
-      background: color-mix(in srgb, var(--sf-secondary) 36%, #646a80 64%); position: relative;
-    }
-    .toggle::after {
-      content: ""; position: absolute; top: 3px; left: 22px; width: 20px; height: 20px; border-radius: 50%;
-      background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25);
-    }
-    .swatches { display: flex; gap: 8px; align-items: center; }
-    .swatch { display: grid; gap: 4px; min-width: 76px; text-align: center; font-size: 11px; color: var(--sf-muted); }
-    .swatch i { width: 100%; height: 18px; border-radius: 999px; border: 1px solid rgba(0,0,0,.12); background: var(--color); }
-
-    .pick-wrap { text-align: center; padding: 8px 0 12px; }
-    .like-btn {
-      border: 0; cursor: pointer; color: #fff;
-      font: 800 18px var(--sf-font-body); letter-spacing: .02em;
-      padding: 18px 46px; border-radius: calc(var(--sf-btn-radius) + 12px);
-      background: var(--sf-primary-gradient);
-      box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 50%, transparent), 0 0 26px color-mix(in srgb, var(--sf-secondary) 30%, transparent);
-      animation: pulse 2.1s ease-in-out infinite;
-      transition: .2s ease;
-    }
-    .like-btn:hover { transform: translateY(-2px) scale(1.02); }
-
-    .mixer {
-      position: fixed; right: 14px; top: 88px; z-index: 70; width: min(330px, calc(100vw - 24px));
-      border-radius: 16px; border: 1px solid rgba(255,255,255,.18);
-      background: rgba(11,16,30,.68); backdrop-filter: blur(14px);
-      box-shadow: 0 14px 42px rgba(0,0,0,.36);
-      color: #eef2ff;
-      transform: translateY(8px) scale(.98); opacity: 0; pointer-events: none;
-      transition: .2s ease;
-    }
-    .mixer.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-    .mixer-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.14); }
-    .mixer h3 { margin: 0; font-size: 15px; }
-    .collapse { border: 0; background: transparent; color: #fff; font-weight: 700; cursor: pointer; border-radius: 8px; padding: 4px 6px; }
-    .mixer-body { padding: 12px 14px 14px; display: grid; gap: 9px; }
-    .mixer.collapsed .mixer-body { display: none; }
-    .field { display: grid; gap: 6px; }
-    .field label { font-size: 12px; font-weight: 700; color: #cad7fb; }
-    .field select {
-      width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,.24);
-      background: rgba(255,255,255,.08); color: #fff; padding: 10px 11px; font: 600 14px Inter, sans-serif;
-    }
-    .summary { border-top: 1px solid rgba(255,255,255,.13); margin-top: 3px; padding-top: 9px; font-size: 12px; line-height: 1.45; color: #dce6ff; }
-    .copy {
-      width: 100%; border: 0; border-radius: 10px; padding: 10px;
-      background: linear-gradient(120deg, #5f8fff, #8e68ff); color: #fff; font-weight: 800; cursor: pointer;
-    }
-
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 50%, transparent), 0 0 0 0 transparent; }
-      50% { box-shadow: 0 22px 48px color-mix(in srgb, var(--sf-primary) 60%, transparent), 0 0 0 7px color-mix(in srgb, var(--sf-primary) 16%, transparent), 0 0 30px color-mix(in srgb, var(--sf-secondary) 32%, transparent); }
-    }
-    /* Dreamscape: extra atmosphere */
-    .preview-panel[data-key="dream"] .composition::before {
-      filter: blur(40px) saturate(1.4);
-      opacity: 1;
-    }
-    .preview-panel[data-key="dream"] h1 {
-      font-style: italic;
-      background: linear-gradient(135deg, #818CF8, #F0ABFC 50%, #67E8F9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .preview-panel[data-key="dream"] .card {
-      backdrop-filter: blur(16px) saturate(1.3);
-      background: rgba(20,28,50,0.55);
-    }
-
-    @keyframes meshMove {
-      0% { background-position: 0% 24%, 84% 12%, 45% 90%; }
-      100% { background-position: 18% 20%, 100% 38%, 20% 82%; }
-    }
-    @keyframes drift {
-      from { transform: translateY(0) translateX(0); opacity: .08; }
-      50% { opacity: .22; }
-      to { transform: translateY(-26px) translateX(8px); opacity: .1; }
-    }
-
-    @media (max-width: 1050px) {
-      .tabs { grid-template-columns: 1fr 1fr; }
-      .preview-stage { min-height: auto; }
-      .preview-panel { position: relative; }
-      .hero { grid-template-columns: 1fr; }
-      .device { margin: 0; }
-      .features { grid-template-columns: 1fr; }
-      .mixer { position: sticky; top: 74px; right: auto; margin-top: 14px; width: 100%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition-duration: 0ms !important; scroll-behavior: auto !important; }
-      .card.reveal { opacity: 1; transform: none; }
-    }
+    .confetti { position: fixed; width: 7px; height: 12px; top: 40%; left: 50%; pointer-events:none; z-index:100; }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
-    <section class="preview-stage" id="previewStage"></section>
-
-    <aside class="mixer" id="mixer">
-      <div class="mixer-head">
-        <h3>Mix & Match</h3>
-        <button class="collapse" id="collapseBtn">Collapse</button>
+  <div class="mesh"></div>
+  <div class="particles" id="particles"></div>
+  <header>
+    <div class="container nav">
+      <div class="logo"><span class="logo-lock"></span>Unspoken</div>
+      <div class="nav-right" id="navRight">
+        <span class="linkish hidden-mobile" id="navExtras"></span>
+        <button class="btn" id="signInBtn">Sign In</button>
+        <button class="btn btn-primary" id="createBtn">Create Account</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
       </div>
-      <div class="mixer-body">
-        <div class="field"><label for="colors">Colors</label><select id="colors"></select></div>
-        <div class="field"><label for="typography">Typography</label><select id="typography"></select></div>
-        <div class="field"><label for="vibe">Vibe</label><select id="vibe"></select></div>
-        <div class="field"><label for="layout">Layout</label><select id="layout"></select></div>
-        <div class="summary" id="summary"></div>
-        <button class="copy" id="copyTokens">📋 Copy Design Tokens</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>A private space for the things you've never said out loud.</h1>
+      <p>Share anonymously. Connect safely. No names, no traces, no judgment.</p>
+      <div class="stats"><span id="statSecrets">0</span> secrets shared · <span id="statConvos">0</span> conversations · 100% private</div>
+      <button class="btn btn-primary cta" id="shareBtn">Share Your Secret</button>
+    </section>
+
+    <div class="topics-wrap">
+      <div class="topics" id="topicBar"></div>
+    </div>
+
+    <section class="feed" id="feed"></section>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <span>About</span><span>Privacy</span><span>Terms</span><span>Safety</span><span>Contact</span>
       </div>
-    </aside>
-  </div>
+      <div>Built with 🔒 for your privacy</div>
+      <div>Unspoken never stores your identity. Ever.</div>
+      <div style="margin-top:8px">Ads are topic-based only. We never track you.</div>
+    </footer>
+  </main>
 
-  <script>
-    const directions = {
-      midnight: {
-        name: 'Midnight Vault', subtitle: "A private space for the things you've never said out loud. Share anonymously. Connect safely. No names, no traces, no judgment.",
-        colors: { '--sf-primary':'#6C63FF','--sf-secondary':'#3D5AFE','--sf-accent':'#B388FF','--sf-bg':'#08090f','--sf-surface':'#111425','--sf-text':'#edf1ff','--sf-muted':'#a2add6','--sf-border':'rgba(155,145,255,.26)','--sf-primary-gradient':'linear-gradient(130deg, #6C63FF 0%, #3D5AFE 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(108,99,255,.32), transparent 34%), radial-gradient(circle at 88% 20%, rgba(61,90,254,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(179,136,255,.21), transparent 40%)' },
-        typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
-        vibe: { '--sf-card-radius':'20px','--sf-btn-radius':'14px','--sf-shadow':'0 18px 40px rgba(0,0,0,.36)','--sf-anim-speed':'240ms' },
-        layout: { '--sf-spacing':'1.14','--sf-grid-gap':'22px','--sf-card-padding':'28px' },
-        tabGlow:'rgba(108,99,255,.45)', badge:'Encrypted Safe Space'
-      },
-      whisper: {
-        name: 'Whisper Light', subtitle: 'Sometimes you just need someone to listen — without knowing who you are. Share your secrets in a space built for honesty and healing.',
-        colors: { '--sf-primary':'#6366F1','--sf-secondary':'#A5B4FC','--sf-accent':'#4F46E5','--sf-bg':'#f0f1fb','--sf-surface':'#ffffff','--sf-text':'#1e1b4b','--sf-muted':'#4b5076','--sf-border':'rgba(79,70,229,.22)','--sf-primary-gradient':'linear-gradient(130deg, #6366F1 0%, #818CF8 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(99,102,241,.22), transparent 36%), radial-gradient(circle at 88% 20%, rgba(165,180,252,.30), transparent 34%), radial-gradient(circle at 48% 84%, rgba(79,70,229,.16), transparent 40%)' },
-        typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
-        vibe: { '--sf-card-radius':'16px','--sf-btn-radius':'12px','--sf-shadow':'0 12px 28px rgba(61,73,122,.12)','--sf-anim-speed':'220ms' },
-        layout: { '--sf-spacing':'1.18','--sf-grid-gap':'24px','--sf-card-padding':'30px' },
-        tabGlow:'rgba(124,140,248,.4)', badge:'Calm + Non-judgmental'
-      },
-      neon: {
-        name: 'Neon Confessional', subtitle: "Drop your secrets into the void. Read what others won't say in real life. Chat anonymously with strangers who actually get it.",
-        colors: { '--sf-primary':'#FF6B9D','--sf-secondary':'#C084FC','--sf-accent':'#22D3EE','--sf-bg':'#0a0a18','--sf-surface':'#121127','--sf-text':'#f5eeff','--sf-muted':'#c4b2df','--sf-border':'rgba(255,107,157,.3)','--sf-primary-gradient':'linear-gradient(130deg, #FF6B9D 0%, #C084FC 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(255,107,157,.3), transparent 34%), radial-gradient(circle at 88% 20%, rgba(192,132,252,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(34,211,238,.2), transparent 40%)' },
-        typography: { '--sf-font-heading':"'Sora', sans-serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'800' },
-        vibe: { '--sf-card-radius':'12px','--sf-btn-radius':'10px','--sf-shadow':'0 18px 42px rgba(0,0,0,.42)','--sf-anim-speed':'200ms' },
-        layout: { '--sf-spacing':'1.1','--sf-grid-gap':'22px','--sf-card-padding':'28px' },
-        tabGlow:'rgba(255,107,157,.45)', badge:'Bold, Youthful, Electric'
-      },
-      shadow: {
-        name: 'Shadow Protocol', subtitle: 'End-to-end anonymous. Zero tracking. Zero identity. Your secrets are yours — we just give you a place to let them out.',
-        colors: { '--sf-primary':'#10B981','--sf-secondary':'#1a1a2e','--sf-accent':'#34D399','--sf-bg':'#020204','--sf-surface':'#0a0e10','--sf-text':'#d9ffe9','--sf-muted':'#8cb9a7','--sf-border':'rgba(52,211,153,.28)','--sf-primary-gradient':'linear-gradient(130deg, #10B981 0%, #34D399 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(16,185,129,.16), transparent 36%), radial-gradient(circle at 88% 20%, rgba(26,26,46,.4), transparent 34%), radial-gradient(circle at 48% 84%, rgba(52,211,153,.12), transparent 40%)' },
-        typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
-        vibe: { '--sf-card-radius':'4px','--sf-btn-radius':'4px','--sf-shadow':'0 16px 34px rgba(0,0,0,.46)','--sf-anim-speed':'170ms' },
-        layout: { '--sf-spacing':'1.08','--sf-grid-gap':'20px','--sf-card-padding':'26px' },
-        tabGlow:'rgba(52,211,153,.44)', badge:'Terminal-grade Privacy'
-      },
-      dream: {
-        name: 'Dreamscape', subtitle: "Every secret is a story waiting to be told. Share yours anonymously and discover that you're never truly alone in what you carry.",
-        colors: { '--sf-primary':'#818CF8','--sf-secondary':'#F0ABFC','--sf-accent':'#67E8F9','--sf-bg':'#0c0f1a','--sf-surface':'#141c32','--sf-text':'#f2f4ff','--sf-muted':'#c4c9e6','--sf-border':'rgba(240,171,252,.24)','--sf-primary-gradient':'linear-gradient(130deg, #818CF8 0%, #F0ABFC 50%, #67E8F9 100%)','--sf-bg-mesh':'radial-gradient(ellipse at 12% 20%, rgba(129,140,248,.35), transparent 42%), radial-gradient(ellipse at 85% 15%, rgba(240,171,252,.30), transparent 40%), radial-gradient(ellipse at 50% 80%, rgba(103,232,249,.25), transparent 42%), radial-gradient(ellipse at 35% 50%, rgba(240,171,252,.12), transparent 50%)' },
-        typography: { '--sf-font-heading':"'Playfair Display', serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'700' },
-        vibe: { '--sf-card-radius':'24px','--sf-btn-radius':'999px','--sf-shadow':'0 18px 44px rgba(7,10,20,.42)','--sf-anim-speed':'240ms' },
-        layout: { '--sf-spacing':'1.16','--sf-grid-gap':'24px','--sf-card-padding':'30px' },
-        tabGlow:'rgba(129,140,248,.46)', badge:'Poetic + Ethereal'
-      }
-    };
+  <button class="fab" id="fabShare">Share Your Secret</button>
+  <nav class="bottom-nav">
+    <button data-go="#/">Home</button>
+    <button id="topicsJump">Topics</button>
+    <button id="shareBottom">Share</button>
+    <button id="accountBottom">Account</button>
+  </nav>
 
-    const order = ['midnight','whisper','neon','shadow','dream'];
-    const state = { active: 'midnight', base: null, colors: 'midnight', typography: 'midnight', vibe: 'midnight', layout: 'midnight', panelVisible: false, collapsed: false };
+  <div class="modal-wrap" id="modalWrap"><div class="modal" id="modal"></div></div>
+  <div class="toast" id="toast"></div>
 
-    const tabsEl = document.getElementById('tabs');
-    const stageEl = document.getElementById('previewStage');
-    const mixer = document.getElementById('mixer');
-    const summary = document.getElementById('summary');
+<script>
+const stories = [
+{ id:1,topic:'Relationships',text:"I'm still in love with my best friend's partner. I've been carrying this for 3 years and it's eating me alive.",hearts:847,commentsCount:234,metoo:1200,time:'3h',comments:[['soft_cloud_118','That kind of silence hurts in places no one can see.'],['steady_fern_221','You deserve space to grieve what can never be.']]},
+{ id:2,topic:'Relationships',text:"I pretend to be happy in my marriage but I haven't felt anything for my spouse in over a year. We have kids. I can't leave.",hearts:2100,commentsCount:567,metoo:3400,time:'1d',comments:[['quiet_drift_490','Staying for kids is heavier than people realize.'],['kind_harbor_102','Please take care of your mental health too.']]},
+{ id:3,topic:'Relationships',text:"I catfished someone for 6 months because I was too afraid they wouldn't like the real me. They fell in love with someone who doesn't exist.",hearts:432,commentsCount:189,metoo:678,time:'2d',comments:[['first_light_812','Fear can make us do desperate things.'],['true_north_514','You can still choose honesty now.']]},
+{ id:4,topic:'Relationships',text:"My partner doesn't know I read their journal. What I found changed everything, but I can't tell them how I know.",hearts:654,commentsCount:201,metoo:891,time:'3d',comments:[['paper_moon_182','Secrets on top of secrets always crack eventually.'],['clear_skies_311','Maybe start with what you felt, not what you read.']]},
+{ id:5,topic:'Relationships',text:"I said 'I love you' first and they said it back but I could see in their eyes they didn't mean it. That was 4 months ago. We're still together.",hearts:1300,commentsCount:312,metoo:2100,time:'5d',comments:[['riverstone_402','Sometimes we hear what we need to survive.'],['honey_night_703','You deserve words that feel true.']]},
+{ id:6,topic:'Family',text:"My parents think I'm successful. I lost my job 8 months ago and I've been pretending to go to work every day.",hearts:3200,commentsCount:891,metoo:5600,time:'1w',comments:[['been_there_4419','I did this for 5 months. Please tell someone before it spirals. The shame gets worse the longer you wait.'],['kind_stranger_7788','You\'re not a failure. The job market is brutal. Your worth isn\'t your job title.'],['phoenix_3321','Same thing happened to me last year. I\'m now in a better job than before. It gets better.']]},
+{ id:7,topic:'Family',text:"I found out I was adopted when I was 30. My whole family knew. Nobody told me.",hearts:1800,commentsCount:423,metoo:2900,time:'6d',comments:[['open_window_410','You have every right to feel betrayed.'],['story_root_671','Your identity is still yours, even now.']]},
+{ id:8,topic:'Family',text:"I love my kids more than anything but sometimes I fantasize about what my life would be like if I never had them.",hearts:4100,commentsCount:1200,metoo:7800,time:'2w',comments:[['tired_sun_949','Parenting grief is real and rarely spoken.'],['light_house_520','Loving them and missing yourself can both be true.']]},
+{ id:9,topic:'Family',text:"I cut off my entire family last year. Everyone thinks I'm cruel. Nobody knows what happened behind closed doors.",hearts:2400,commentsCount:678,metoo:4200,time:'4d',comments:[['safe_room_101','Boundaries are not cruelty.'],['moss_lane_609','You don\'t owe everyone your trauma receipts.']]},
+{ id:10,topic:'Career',text:"I make $200k and I have no idea what I'm doing. Imposter syndrome is real and it gets worse every promotion.",hearts:5100,commentsCount:1400,metoo:8900,time:'12h',comments:[['metric_fox_199','Most high performers feel exactly this.'],['gridline_845','Competence often feels like panic in disguise.']]},
+{ id:11,topic:'Career',text:"I reported my boss for harassment. HR sided with him. I quit. He's still there.",hearts:3800,commentsCount:934,metoo:6100,time:'1d',comments:[['solidarity_290','I\'m sorry the system failed you.'],['brave_quiet_611','Thank you for speaking up even when it cost you.']]},
+{ id:12,topic:'Career',text:"I've been working remotely for a company that thinks I'm in New York. I'm actually living in Thailand spending a fraction of my salary.",hearts:1200,commentsCount:456,metoo:2300,time:'9h',comments:[['remote_owl_820','This is chaotic neutral and I respect it.'],['visa_wave_010','Just keep taxes clean and enjoy life.']]},
+{ id:13,topic:'Career',text:"I turned down my dream job because it would have meant moving away from my aging mother. She doesn't know.",hearts:987,commentsCount:234,metoo:1500,time:'3d',comments:[['gentle_clock_390','Love often looks like invisible sacrifices.'],['northbound_880','You made a brave choice either way.']]},
+{ id:14,topic:'Health',text:"I was diagnosed with something serious 6 months ago. I haven't told anyone. I don't want to be treated differently.",hearts:2700,commentsCount:789,metoo:4500,time:'1w',comments:[['quiet_breath_533','Carrying this alone is exhausting.'],['warm_tea_177','You deserve support, not pity.']]},
+{ id:15,topic:'Health',text:"I've been sober for 2 years but nobody knows I was ever an addict. I go to meetings in a different city so no one recognizes me.",hearts:3400,commentsCount:867,metoo:5800,time:'2d',comments:[['steady_hand_781','Two years is huge. Proud of you.'],['clear_water_117','Anonymity can be a bridge to healing.']]},
+{ id:16,topic:'Health',text:"I smile every day at work but I've been struggling with depression for years. The mask is getting heavier.",hearts:6200,commentsCount:1800,metoo:11000,time:'8h',comments:[['hidden_soul_2847','This is me. Every single day. You\'re not alone.'],['quiet_mind_9012','Have you considered talking to someone professional? It helped me more than I expected.'],['gentle_rain_4455','The mask gets heavier because we never put it down. You just did, even if anonymously. That\'s brave.'],['slow_river_7721','I told one person last year. Just one. It changed everything. You don\'t have to carry this alone.']]},
+{ id:17,topic:'Identity',text:"I'm 45 and I just realized I'm gay. I have a wife and three kids. I don't know what to do.",hearts:4800,commentsCount:1300,metoo:7200,time:'1d',comments:[['open_door_202','Late realizations are still real.'],['kind_compass_403','Honesty can be painful and still kind.']]},
+{ id:18,topic:'Identity',text:"Nobody in my life knows the real me. I perform a version of myself for every person I interact with. I don't even know who I actually am anymore.",hearts:3600,commentsCount:945,metoo:6400,time:'2d',comments:[['plain_voice_118','Performance fatigue is real.'],['small_truth_700','Try being 5% more honest somewhere safe.']]},
+{ id:19,topic:'Identity',text:"I changed my name and moved across the country to escape my past. My new friends think I grew up normal. I didn't.",hearts:2100,commentsCount:534,metoo:3700,time:'3d',comments:[['new_leaf_155','Reinvention can be survival.'],['echo_line_311','You can share pieces when you\'re ready.']]},
+{ id:20,topic:'Regret',text:"I didn't visit my grandmother before she died because I was 'too busy.' She asked for me. I'll never forgive myself.",hearts:5400,commentsCount:1500,metoo:9100,time:'6h',comments:[['lavender_note_551','Grief always rewrites priorities too late.'],['soft_psalm_203','She likely loved you beyond that moment.']]},
+{ id:21,topic:'Regret',text:"I had the chance to save someone's life and I froze. I think about it every single day.",hearts:2900,commentsCount:812,metoo:4800,time:'5d',comments:[['mercy_lane_998','Trauma freezes people. It\'s a body response, not evil.'],['quiet_resolve_188','Please consider trauma counseling if you can.']]},
+{ id:22,topic:'Regret',text:"I chose money over passion when I was 22. I'm 40 now and I was wrong.",hearts:1700,commentsCount:423,metoo:2800,time:'1w',comments:[['fresh_canvas_761','40 is still early for a second life.'],['tangent_path_309','Your story isn\'t over yet.']]},
+{ id:23,topic:'Love',text:"I write letters to someone who will never read them. I've filled three notebooks. It's the only way I can let go.",hearts:3100,commentsCount:876,metoo:5200,time:'2d',comments:[['ink_heart_900','That is heartbreak and healing at once.'],['moonmail_477','Keep writing. It\'s medicine.']]},
+{ id:24,topic:'Love',text:"The person I loved most in this world doesn't know they saved my life just by existing. I never told them.",hearts:4500,commentsCount:1100,metoo:7600,time:'14h',comments:[['sunlit_veil_100','Some people are shelter without knowing.'],['brave_note_414','Maybe send one honest message.']]},
+{ id:25,topic:'Love',text:"I met the love of my life at the wrong time. We both know it. We never talk about it.",hearts:6800,commentsCount:2100,metoo:12000,time:'7h',comments:[['night_walker_5523','This hit so hard I had to put my phone down.'],['old_flame_8834','Same story, 12 years later. It still hurts but it hurts less. Promise.'],['hopeful_heart_2291','Maybe there\'s no wrong time. Maybe you both just need to be brave enough to try.']]}
+];
+const ads = [
+  'Mindful Journal — Track your thoughts privately. No account needed.',
+  'BetterHelp — Professional therapy, completely confidential.',
+  'NordVPN — Your privacy matters everywhere, not just here.'
+];
+const topicOrder = ['All','Relationships','Family','Career','Health','Identity','Regret','Love'];
+const gradientPool = ['linear-gradient(130deg,#6C63FF,#3D5AFE)','linear-gradient(130deg,#B388FF,#6C63FF)','linear-gradient(130deg,#3D5AFE,#00b3ff)','linear-gradient(130deg,#8f6bff,#ff74d4)','linear-gradient(130deg,#5e5ce6,#7a9cff)'];
+let activeTopic = 'All';
+let observer;
 
-    const features = [
-      {
-        title: 'Anonymous Posts',
-        text: 'Write what\'s really on your mind. No account needed, no name attached. Your secret gets a random identity — completely untraceable.',
-        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M9 13s1.5 2 3 2 3-2 3-2"/></svg>`
-      },
-      {
-        title: 'Private Chat',
-        text: 'Someone resonated with your secret? Start an encrypted conversation. Both sides stay anonymous — talk freely without fear.',
-        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/><rect x="9" y="9" width="6" height="5" rx="1"/><path d="M10 9V7a2 2 0 014 0v2"/></svg>`
-      },
-      {
-        title: 'Community Reactions',
-        text: 'React, comment, and support others without revealing yourself. Build real connections from behind the safety of anonymity.',
-        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A4.5 4.5 0 0112 5a4.5 4.5 0 018 5.2c0 7.3-8 11.8-8 11.8z"/><path d="M12 13v-2m0 0V9"/></svg>`
-      }
-    ];
+const feed = document.getElementById('feed');
+const topicBar = document.getElementById('topicBar');
+const modalWrap = document.getElementById('modalWrap');
+const modal = document.getElementById('modal');
+const toast = document.getElementById('toast');
 
-    function makeParticles() {
-      return new Array(22).fill(0).map((_, i) => `<i style="left:${(i * 37) % 100}%;top:${(i * 53) % 100}%;--d:${10 + (i % 9)}s"></i>`).join('');
+function compact(n){ return n>=1000? (Math.round(n/100)/10)+'k' : n; }
+function uname(){ const a=['silent','hidden','gentle','night','soft','quiet','open','steady']; const b=['echo','truth','rain','river','heart','soul','signal','haze']; return `${a[Math.floor(Math.random()*a.length)]}_${b[Math.floor(Math.random()*b.length)]}_${Math.floor(1000+Math.random()*9000)}`; }
+function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
+
+function createParticles(){
+  const p = document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const d=document.createElement('div'); d.className='particle';
+    d.style.left=Math.random()*100+'%'; d.style.top=(20+Math.random()*80)+'%';
+    d.style.animationDelay=(Math.random()*10)+'s'; d.style.animationDuration=(9+Math.random()*10)+'s';
+    p.appendChild(d);
+  }
+}
+
+function renderTopics(){
+  const counts = {All:stories.length};
+  stories.forEach(s => counts[s.topic]=(counts[s.topic]||0)+1);
+  topicBar.innerHTML='';
+  topicOrder.forEach(t=>{
+    const b=document.createElement('button'); b.className='pill'+(t===activeTopic?' active':'');
+    b.textContent=`${t} (${counts[t]||0})`;
+    b.onclick=()=>{ location.hash = t==='All' ? '#/' : `#/topic/${t.toLowerCase()}`; };
+    topicBar.appendChild(b);
+  });
+}
+
+function injectFeed(){
+  const data = activeTopic==='All' ? stories : stories.filter(s=>s.topic===activeTopic);
+  feed.innerHTML='';
+  let adIdx=0;
+  data.forEach((s,idx)=>{
+    if(idx>0 && idx%8===0){
+      const ad=document.createElement('article'); ad.className='ad-card';
+      ad.innerHTML=`<div class="ad-badge">Ad · Sponsored</div><p style="margin:.6rem 0 0">${ads[adIdx%ads.length]}</p>`;
+      feed.appendChild(ad); adIdx++;
     }
+    const card=document.createElement('article'); card.className='card';
+    const av = gradientPool[s.id%gradientPool.length];
+    card.innerHTML=`<div class='card-top'><div class='user'><span class='avatar' style='background:${av}'></span>${uname()}</div><span class='time'>${s.time}</span></div>
+      <div class='secret-text'>${s.text}</div>${s.text.length>115?'<span class="read-more">Read more...</span>':''}
+      <span class='tag'>#${s.topic.toLowerCase()}</span>
+      <div class='reacts'>
+      <button class='react' data-k='hearts'>❤️ <span>${compact(s.hearts)}</span></button>
+      <button class='react' data-k='commentsCount'>💬 <span>${compact(s.commentsCount)}</span></button>
+      <button class='react' data-k='metoo'>🤝 <span>${compact(s.metoo)}</span></button></div>`;
+    card.onclick=(e)=>{ if(!e.target.closest('.react')) location.hash=`#/s/${s.id}`; };
+    card.querySelectorAll('.react').forEach(btn=>btn.onclick=(e)=>{e.stopPropagation(); const key=btn.dataset.k; s[key]+=1; btn.querySelector('span').textContent=compact(s[key]); btn.classList.add('bounce'); setTimeout(()=>btn.classList.remove('bounce'),240); });
+    feed.appendChild(card);
+  });
+  observeCards();
+}
 
-    function phoneMockup(key) {
-      if (key === 'whisper') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Whisper light chat mockup" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
-        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
-        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
-        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
-        <rect x="36" y="62" width="208" height="46" rx="14" fill="url(#g-${key})" opacity=".9"/>
-        <rect x="48" y="76" width="82" height="8" rx="4" fill="rgba(255,255,255,.95)"/>
-        <rect x="48" y="90" width="122" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
-        <rect x="36" y="122" width="145" height="36" rx="12" fill="color-mix(in srgb, var(--sf-primary) 20%, white 80%)"/>
-        <rect x="46" y="136" width="108" height="7" rx="4" fill="var(--sf-text)" opacity=".7"/>
-        <rect x="99" y="168" width="145" height="36" rx="12" fill="color-mix(in srgb, var(--sf-secondary) 16%, white 84%)"/>
-        <rect x="110" y="182" width="106" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
-        <rect x="36" y="214" width="154" height="36" rx="12" fill="color-mix(in srgb, var(--sf-accent) 15%, white 85%)"/>
-        <rect x="46" y="228" width="112" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
-        <rect x="36" y="430" width="208" height="52" rx="14" fill="color-mix(in srgb, var(--sf-bg) 10%, var(--sf-surface))" stroke="var(--sf-border)"/>
-        <rect x="48" y="447" width="138" height="16" rx="8" fill="rgba(127,140,250,.22)"/>
-        <circle cx="223" cy="456" r="13" fill="var(--sf-primary)"/>
-      </svg>`;
+function observeCards(){
+  if(observer) observer.disconnect();
+  observer = new IntersectionObserver((entries)=>entries.forEach((en,i)=>{ if(en.isIntersecting){ setTimeout(()=>en.target.classList.add('visible'), i*70); observer.unobserve(en.target);} }), {threshold:.15});
+  document.querySelectorAll('.card,.ad-card').forEach(el=>observer.observe(el));
+}
 
-      if (key === 'shadow') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Shadow protocol terminal mockup" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="8" width="264" height="524" rx="40" fill="#020204" stroke="var(--sf-border)"/>
-        <rect x="22" y="42" width="236" height="458" rx="20" fill="#070b0d"/>
-        <rect x="100" y="20" width="80" height="7" rx="3" fill="var(--sf-border)"/>
-        <rect x="36" y="62" width="208" height="30" rx="3" fill="#060a08" stroke="var(--sf-border)"/>
-        <rect x="46" y="72" width="60" height="8" rx="2" fill="var(--sf-primary)" opacity=".8"/>
-        <rect x="36" y="104" width="208" height="296" rx="3" fill="#030503" stroke="var(--sf-border)"/>
-        <rect x="46" y="118" width="40" height="4" rx="1" fill="var(--sf-primary)"/><rect x="90" y="118" width="116" height="4" rx="1" fill="var(--sf-muted)" opacity=".5"/>
-        <rect x="46" y="136" width="86" height="4" rx="1" fill="var(--sf-primary)" opacity=".75"/><rect x="136" y="136" width="70" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
-        <rect x="46" y="154" width="36" height="4" rx="1" fill="var(--sf-primary)"/><rect x="86" y="154" width="108" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
-        <rect x="46" y="186" width="140" height="28" rx="2" fill="#07120d" stroke="var(--sf-border)"/>
-        <rect x="56" y="198" width="94" height="4" rx="1" fill="var(--sf-primary)" opacity=".8"/>
-        <rect x="46" y="222" width="180" height="28" rx="2" fill="#07120d" stroke="var(--sf-border)"/>
-        <rect x="56" y="234" width="126" height="4" rx="1" fill="var(--sf-accent)" opacity=".8"/>
-        <rect x="36" y="412" width="208" height="70" rx="4" fill="#060a08" stroke="var(--sf-border)"/>
-        <rect x="48" y="430" width="74" height="8" rx="2" fill="var(--sf-primary)"/><rect x="48" y="445" width="188" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
-      </svg>`;
+function secretModal(s){
+  modal.innerHTML = `<button class='close' id='closeM'>✕</button>
+    <h2 style='font-family:var(--font-heading);margin:.2rem 0 0'>Anonymous confession</h2>
+    <p style='color:#f2f5ff'>${s.text}</p>
+    <div style='display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0'>
+      <button class='btn' id='chatBtn'>Start Anonymous Chat</button>
+      <button class='btn' id='shareLinkBtn'>Share</button>
+    </div>
+    <h3 style='margin:.9rem 0 .4rem'>Community replies</h3>
+    <div class='comments'>${s.comments.map((c,ix)=>`<div class='comment'><div class='head'><span class='c-avatar' style='background:${gradientPool[(ix+s.id)%gradientPool.length]}'></span>${c[0]} · ${['1h','3h','8h','1d','2d'][ix%5]}</div><div>${c[1]}</div></div>`).join('')}</div>
+    <div class='input-row'><input placeholder='Reply anonymously...' /><button class='btn btn-primary' id='replyBtn'>Send</button></div>`;
+  modalWrap.classList.add('show');
+  document.getElementById('closeM').onclick=()=>closeModal(true);
+  document.getElementById('chatBtn').onclick=()=>showToast('Chat launching soon!');
+  document.getElementById('shareLinkBtn').onclick=async()=>{const link=`${location.origin}${location.pathname}#/s/${s.id}`; try{await navigator.clipboard.writeText(link); showToast('Link copied');}catch{showToast(link);} };
+  document.getElementById('replyBtn').onclick=()=>showToast('Reply posted anonymously');
+}
 
-      if (key === 'dream') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Dreamscape floating bubble cards mockup" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
-        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
-        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
-        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
-        <rect x="36" y="62" width="208" height="78" rx="22" fill="url(#g-${key})" opacity=".86"/>
-        <rect x="48" y="78" width="102" height="8" rx="4" fill="rgba(255,255,255,.94)"/>
-        <rect x="48" y="92" width="144" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
-        <rect x="48" y="104" width="80" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
-        <rect x="36" y="156" width="172" height="64" rx="24" fill="rgba(255,255,255,.11)" stroke="var(--sf-border)"/>
-        <rect x="48" y="177" width="120" height="7" rx="4" fill="var(--sf-text)" opacity=".66"/>
-        <rect x="92" y="230" width="152" height="58" rx="22" fill="rgba(255,255,255,.09)" stroke="var(--sf-border)"/>
-        <rect x="104" y="250" width="102" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
-        <rect x="36" y="298" width="196" height="62" rx="24" fill="rgba(255,255,255,.1)" stroke="var(--sf-border)"/>
-        <rect x="48" y="320" width="136" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
-      </svg>`;
+function shareModal(){
+  let selected='Relationships';
+  modal.innerHTML = `<button class='close' id='closeM'>✕</button>
+    <h2 style='font-family:var(--font-heading);margin-top:0'>Share Your Secret</h2>
+    <textarea id='newSecret' placeholder="What's on your mind? No one will know it's you."></textarea>
+    <div class='topics' id='shareTopics' style='margin-top:8px;flex-wrap:wrap'>${topicOrder.slice(1).map(t=>`<button class='pill ${t===selected?'active':''}' data-t='${t}'>${t}</button>`).join('')}</div>
+    <div class='switches'><label><input type='checkbox' id='allowChat' checked> Allow anonymous chat</label><label><input type='checkbox' id='allowComments' checked> Allow comments</label></div>
+    <button class='btn btn-primary' id='postSecret'>Share Anonymously</button>`;
+  modalWrap.classList.add('show');
+  document.getElementById('closeM').onclick=()=>closeModal(true);
+  document.querySelectorAll('#shareTopics .pill').forEach(p=>p.onclick=()=>{selected=p.dataset.t; document.querySelectorAll('#shareTopics .pill').forEach(x=>x.classList.remove('active')); p.classList.add('active');});
+  document.getElementById('postSecret').onclick=()=>{
+    const text=document.getElementById('newSecret').value.trim(); if(text.length<10) return showToast('Share a little more so people can understand.');
+    stories.unshift({id:Date.now(),topic:selected,text,hearts:0,commentsCount:0,metoo:0,time:'Just now',comments:[['kind_stranger_7788','Thank you for trusting this space.'] ]});
+    launchConfetti(); closeModal(true); route(); showToast('Your secret is now live. You are anonymous_user_'+Math.floor(1000+Math.random()*9000));
+  }
+}
 
-      if (key === 'neon') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Neon confessional feed mockup" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1"><stop offset="0%" stop-color="#FF6B9D"/><stop offset="100%" stop-color="#C084FC"/></linearGradient>
-          <linearGradient id="g2" x1="0" x2="1"><stop offset="0%" stop-color="#C084FC"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient>
-        </defs>
-        <rect x="8" y="8" width="264" height="524" rx="40" fill="#090816" stroke="var(--sf-border)"/>
-        <rect x="22" y="42" width="236" height="458" rx="28" fill="#100d22"/>
-        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
-        <rect x="36" y="62" width="208" height="34" rx="10" fill="#151333" stroke="var(--sf-border)"/>
-        <rect x="44" y="73" width="84" height="10" rx="5" fill="var(--sf-primary)"/>
-        <rect x="36" y="108" width="208" height="78" rx="12" fill="url(#g1)" opacity=".9"/>
-        <rect x="48" y="124" width="146" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
-        <rect x="48" y="138" width="104" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
-        <rect x="36" y="196" width="208" height="78" rx="12" fill="url(#g2)" opacity=".9"/>
-        <rect x="48" y="212" width="124" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
-        <rect x="48" y="226" width="148" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
-        <rect x="36" y="284" width="208" height="78" rx="12" fill="url(#g1)" opacity=".85"/>
-        <rect x="48" y="300" width="130" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
-      </svg>`;
-
-      return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Midnight vault anonymous feed mockup" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
-        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
-        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
-        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
-        <rect x="36" y="62" width="208" height="38" rx="10" fill="url(#g-${key})" opacity=".92"/>
-        <rect x="48" y="75" width="112" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
-        <rect x="36" y="114" width="208" height="88" rx="16" fill="rgba(255,255,255,.05)" stroke="var(--sf-border)"/>
-        <circle cx="58" cy="140" r="12" fill="var(--sf-accent)" opacity=".8"/>
-        <rect x="76" y="132" width="112" height="7" rx="3" fill="var(--sf-text)" opacity=".68"/>
-        <rect x="76" y="144" width="136" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
-        <rect x="76" y="154" width="86" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
-        <rect x="36" y="214" width="208" height="88" rx="16" fill="rgba(255,255,255,.05)" stroke="var(--sf-border)"/>
-        <circle cx="58" cy="240" r="12" fill="var(--sf-primary)" opacity=".8"/>
-        <rect x="76" y="232" width="128" height="7" rx="3" fill="var(--sf-text)" opacity=".68"/>
-        <rect x="76" y="244" width="124" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
-        <rect x="76" y="254" width="96" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
-      </svg>`;
+function accountModal(type='create'){
+  const sugg = uname();
+  modal.innerHTML = `<button class='close' id='closeM'>✕</button>
+    <h2 style='font-family:var(--font-heading);margin-top:0'>${type==='create'?'Create Account':'Sign In'}</h2>
+    <div style='display:grid;gap:8px'>
+      <input id='accUser' value='${type==='create'?sugg:''}' placeholder='Username' />
+      <input id='accPass' type='password' placeholder='Password' />
+      ${type==='create' ? `<input id='accEmail' placeholder='Optional email (Leave blank to stay fully incognito)' />
+      <label style='font-size:.9rem;color:var(--muted)'><input id='ack' type='checkbox'/> I understand my identity is never shared</label>` : ''}
+      <button class='btn btn-primary' id='accSubmit'>${type==='create'?'Create':'Sign In'}</button>
+    </div>`;
+  modalWrap.classList.add('show');
+  document.getElementById('closeM').onclick=()=>closeModal(true);
+  document.getElementById('accSubmit').onclick=()=>{
+    const user=document.getElementById('accUser').value.trim(); const pass=document.getElementById('accPass').value;
+    if(!user||!pass) return showToast('Enter username and password');
+    const users=JSON.parse(localStorage.getItem('unspoken_users')||'[]');
+    if(type==='create'){
+      if(!document.getElementById('ack').checked) return showToast('Please confirm anonymity acknowledgement');
+      if(users.find(u=>u.user===user)) return showToast('Username already exists');
+      users.push({user,pass,email:document.getElementById('accEmail').value.trim()}); localStorage.setItem('unspoken_users',JSON.stringify(users));
     }
+    const ok = type==='sign' ? users.some(u=>u.user===user&&u.pass===pass) : true;
+    if(!ok) return showToast('Invalid credentials');
+    localStorage.setItem('unspoken_session', JSON.stringify({user}));
+    closeModal(true); updateAuthUI(); showToast(type==='create'?'Account created':'Welcome back');
+  }
+}
 
-    function makePanel(key) {
-      const d = directions[key];
-      const panel = document.createElement('article');
-      panel.className = `preview-panel${key === state.active ? ' active' : ''}`;
-      panel.dataset.key = key;
-      panel.innerHTML = `
-      <div class="composition">
-        <div class="particles">${makeParticles()}</div>
-        <div class="content">
-          <div class="hero">
-            <div>
-              <div class="eyebrow">${d.badge}</div>
-              <h1>Unspoken</h1>
-              <p class="subtitle">${d.subtitle}</p>
-              <div class="hero-actions">
-                <button class="btn btn-primary">Share a Secret</button>
-                <button class="btn btn-secondary customize">Customize →</button>
-              </div>
-            </div>
-            <div class="device">${phoneMockup(key)}</div>
-          </div>
+function updateAuthUI(){
+  const session=JSON.parse(localStorage.getItem('unspoken_session')||'null');
+  const extras=document.getElementById('navExtras');
+  if(session){ extras.textContent='My Secrets · My Conversations'; document.getElementById('signInBtn').textContent='Sign Out'; }
+  else { extras.textContent=''; document.getElementById('signInBtn').textContent='Sign In'; }
+}
 
-          <div class="features">
-            ${features.map(f => `<article class="card reveal"><div class="icon-wrap">${f.icon}</div><h3>${f.title}</h3><p>${f.text}</p></article>`).join('')}
-          </div>
+function closeModal(back=false){ modalWrap.classList.remove('show'); modal.innerHTML=''; if(back && location.hash.startsWith('#/s/')) location.hash = activeTopic==='All' ? '#/' : `#/topic/${activeTopic.toLowerCase()}`; }
+modalWrap.onclick=(e)=>{ if(e.target===modalWrap) closeModal(true); }
 
-          <div class="component-strip">
-            <button class="btn btn-primary">Primary</button>
-            <button class="btn btn-secondary">Secondary</button>
-            <button class="btn btn-ghost">Ghost</button>
-            <input class="mini-input" placeholder="Write anonymously…" aria-label="Sample input" />
-            <div class="toggle" aria-hidden="true"></div>
-            <div class="swatches">
-              <span class="swatch"><i style="--color:var(--sf-primary)"></i><b>Primary</b><span data-token="--sf-primary"></span></span>
-              <span class="swatch"><i style="--color:var(--sf-secondary)"></i><b>Secondary</b><span data-token="--sf-secondary"></span></span>
-              <span class="swatch"><i style="--color:var(--sf-accent)"></i><b>Accent</b><span data-token="--sf-accent"></span></span>
-            </div>
-          </div>
+function launchConfetti(){
+  for(let i=0;i<28;i++){
+    const c=document.createElement('div'); c.className='confetti'; c.style.background= ['#6C63FF','#B388FF','#3D5AFE','#edf1ff'][i%4];
+    c.style.transform=`translate(${(Math.random()*220-110)}px, ${Math.random()*20}px) rotate(${Math.random()*360}deg)`;
+    c.animate([{opacity:1,transform:c.style.transform},{opacity:0,transform:`translate(${Math.random()*420-210}px, ${220+Math.random()*200}px)`}],{duration:900+Math.random()*500,easing:'cubic-bezier(.2,.8,.2,1)'});
+    document.body.appendChild(c); setTimeout(()=>c.remove(),1400);
+  }
+}
 
-          <div class="pick-wrap">
-            <button class="like-btn" data-like="${key}">I Like This One</button>
-          </div>
-        </div>
-      </div>`;
-      return panel;
-    }
+function animateStats(){
+  const targets=[{el:'statSecrets',v:50247},{el:'statConvos',v:12891}];
+  targets.forEach(t=>{ const node=document.getElementById(t.el); let s=0; const st=performance.now(); const dur=2000;
+    requestAnimationFrame(function step(n){ const p=Math.min(1,(n-st)/dur); s=Math.floor(t.v*p); node.textContent=s.toLocaleString(); if(p<1) requestAnimationFrame(step); });
+  });
+}
 
-    function setVars(el, vars) { Object.entries(vars).forEach(([k,v]) => el.style.setProperty(k, v)); }
+function route(){
+  const hash=location.hash||'#/';
+  const sMatch=hash.match(/^#\/s\/(\d+)/);
+  const tMatch=hash.match(/^#\/topic\/(.+)/);
+  if(tMatch){ activeTopic = tMatch[1].charAt(0).toUpperCase()+tMatch[1].slice(1); if(!topicOrder.includes(activeTopic)) activeTopic='All'; }
+  else activeTopic='All';
+  renderTopics(); injectFeed();
+  if(sMatch){ const s=stories.find(x=>String(x.id)===sMatch[1]); if(s) secretModal(s); }
+}
 
-    function applyToPanel(panelKey) {
-      const panel = stageEl.querySelector(`.preview-panel[data-key="${panelKey}"] .composition`);
-      if (!panel) return;
-      setVars(panel, directions[state.colors].colors);
-      setVars(panel, directions[state.typography].typography);
-      setVars(panel, directions[state.vibe].vibe);
-      setVars(panel, directions[state.layout].layout);
-      document.documentElement.style.setProperty('--tab-glow', directions[state.colors].tabGlow);
-      document.documentElement.style.setProperty('--sf-primary-gradient', directions[state.colors].colors['--sf-primary-gradient']);
-      panel.querySelectorAll('[data-token]').forEach(el => {
-        const token = el.getAttribute('data-token');
-        el.textContent = directions[state.colors].colors[token] || '';
-      });
-      revealCards(panel);
-    }
+// events
+window.addEventListener('hashchange', route);
+document.getElementById('shareBtn').onclick=shareModal;
+document.getElementById('fabShare').onclick=shareModal;
+document.getElementById('shareBottom').onclick=shareModal;
+document.getElementById('createBtn').onclick=()=>accountModal('create');
+document.getElementById('accountBottom').onclick=()=>accountModal('create');
+document.getElementById('signInBtn').onclick=()=>{
+  const session=JSON.parse(localStorage.getItem('unspoken_session')||'null');
+  if(session){ localStorage.removeItem('unspoken_session'); updateAuthUI(); showToast('Signed out'); }
+  else accountModal('sign');
+};
+document.getElementById('menuBtn').onclick=()=>showToast('Use bottom nav on mobile');
+document.getElementById('topicsJump').onclick=()=>window.scrollTo({top:360,behavior:'smooth'});
+document.querySelectorAll('.bottom-nav [data-go]').forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
 
-    function revealCards(panel) {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const cards = panel.querySelectorAll('.card.reveal');
-      cards.forEach((c, i) => setTimeout(() => c.classList.add('in'), 80 + i * 90));
-    }
-
-    function refreshTabs() { tabsEl.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.active)); }
-
-    function renderSummary() {
-      summary.textContent = `Base: ${state.base ? directions[state.base].name : 'Not selected'} | Colors: ${directions[state.colors].name} | Typography: ${directions[state.typography].name} | Vibe: ${directions[state.vibe].name} | Layout: ${directions[state.layout].name}`;
-    }
-
-    function showMixer() { state.panelVisible = true; mixer.classList.add('visible'); }
-
-    function syncSelects() {
-      ['colors','typography','vibe','layout'].forEach(id => document.getElementById(id).value = state[id]);
-      renderSummary();
-    }
-
-    function setActive(key) {
-      state.active = key;
-      stageEl.querySelectorAll('.preview-panel').forEach(p => p.classList.toggle('active', p.dataset.key === key));
-      refreshTabs();
-      if (!state.base) {
-        state.colors = state.typography = state.vibe = state.layout = key;
-        syncSelects();
-      }
-      applyToPanel(key);
-    }
-
-    function copyTokens() {
-      const payload = {
-        base: state.base ? directions[state.base].name : null,
-        selections: {
-          colors: directions[state.colors].name,
-          typography: directions[state.typography].name,
-          vibe: directions[state.vibe].name,
-          layout: directions[state.layout].name
-        },
-        tokens: {
-          ...directions[state.colors].colors,
-          ...directions[state.typography].typography,
-          ...directions[state.vibe].vibe,
-          ...directions[state.layout].layout
-        }
-      };
-      navigator.clipboard.writeText(JSON.stringify(payload, null, 2)).then(() => {
-        const btn = document.getElementById('copyTokens');
-        const old = btn.textContent;
-        btn.textContent = '✅ Copied';
-        setTimeout(() => btn.textContent = old, 1200);
-      });
-    }
-
-    function boot() {
-      tabsEl.innerHTML = order.map(key => `<button class="tab${key === state.active ? ' active' : ''}" data-key="${key}">${directions[key].name}</button>`).join('');
-      stageEl.innerHTML = '';
-      order.forEach(key => stageEl.appendChild(makePanel(key)));
-
-      ['colors','typography','vibe','layout'].forEach(id => {
-        const sel = document.getElementById(id);
-        sel.innerHTML = order.map(key => `<option value="${key}">${directions[key].name}</option>`).join('');
-        sel.addEventListener('change', e => { state[id] = e.target.value; applyToPanel(state.active); renderSummary(); });
-      });
-
-      tabsEl.addEventListener('click', e => {
-        const btn = e.target.closest('.tab');
-        if (!btn) return;
-        setActive(btn.dataset.key);
-      });
-
-      stageEl.addEventListener('click', e => {
-        if (e.target.closest('.customize')) showMixer();
-        const like = e.target.closest('[data-like]');
-        if (!like) return;
-        const k = like.dataset.like;
-        state.base = k;
-        state.colors = state.typography = state.vibe = state.layout = k;
-        setActive(k);
-        showMixer();
-        syncSelects();
-      });
-
-      document.getElementById('copyTokens').addEventListener('click', copyTokens);
-      document.getElementById('collapseBtn').addEventListener('click', () => {
-        state.collapsed = !state.collapsed;
-        mixer.classList.toggle('collapsed', state.collapsed);
-        document.getElementById('collapseBtn').textContent = state.collapsed ? 'Expand' : 'Collapse';
-      });
-
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!reduce) {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in'); });
-        }, { threshold: .2 });
-        stageEl.querySelectorAll('.card.reveal').forEach(c => observer.observe(c));
-      }
-
-      setActive('midnight');
-      applyToPanel('midnight');
-      syncSelects();
-    }
-
-    boot();
-  </script>
+createParticles(); animateStats(); updateAuthUI(); route();
+</script>
 </body>
 </html>
