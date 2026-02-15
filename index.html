@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StyleForge ✨ — Design Your Experience</title>
+  <title>StyleForge ✨ - Design Your Experience</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -198,10 +198,10 @@
     .cta {
       border: 0;
       color: white;
-      font: 700 1rem Inter, sans-serif;
+      font: 800 1.15rem Inter, sans-serif;
       letter-spacing: 0.3px;
-      padding: 14px 24px;
-      border-radius: 14px;
+      padding: 18px 38px;
+      border-radius: 16px;
       cursor: pointer;
       background: linear-gradient(95deg, var(--accent1), var(--accent2), var(--accent3));
       background-size: 200% 100%;
@@ -274,7 +274,7 @@
       border-color: rgba(165, 188, 255, 0.55);
     }
 
-    .card.off { opacity: .5; filter: grayscale(.2); }
+    .card.off { opacity: .35; filter: grayscale(.5); transform: scale(0.97); }
 
     .top {
       display: flex;
@@ -357,8 +357,8 @@
     .switch input:checked + .track::before { transform: translateX(18px); }
 
     .demo {
-      margin-top: 10px;
-      height: 64px;
+      margin-top: 8px;
+      height: 44px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(8, 10, 26, 0.55);
@@ -434,11 +434,12 @@
   <main class="wrap">
     <section class="hero" id="top">
       <div class="hero-panel">
-        <h1>✨ StyleForge<br>Design System Generator</h1>
-        <p class="sub">Tell us about your project and we’ll create <strong>5 unique design directions</strong> tailored to you.</p>
+        <p style="margin:0 0 6px;font-size:0.92rem;color:#b3bbd6;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">✨ StyleForge</p>
+        <h1>Design Your Website<br>In Minutes, Not Months</h1>
+        <p class="sub">Describe your project in plain English and we'll generate <strong>5 unique, ready-to-build design directions</strong> — colors, typography, components, animations — all tailored to your brand.</p>
 
         <div class="prompt-box">
-          <textarea id="projectPrompt" placeholder="Describe your project, audience, and the feeling you want your site to give people...&#10;&#10;Example: &quot;We're building a marketplace where freelance video editors can find clients. Target audience is creative professionals 25-40. We want modern and trustworthy, not flashy. Think Linear meets Upwork.&quot;"></textarea>
+          <textarea id="projectPrompt" placeholder="Tell us what you're building and who it's for...&#10;&#10;Examples:&#10;• &quot;A marketplace where freelance video editors find clients. Creative professionals, 25-40. Modern and trustworthy, not flashy.&quot;&#10;• &quot;I run a bakery in Portland. I want something warm and clean that makes people want to visit.&quot;&#10;• &quot;SaaS tool for project managers. Think Notion meets Monday.com but simpler.&quot;"></textarea>
         </div>
 
         <div class="controls">
@@ -452,11 +453,11 @@
           </div>
 
           <div class="slider-row">
-            <label for="density">Density</label>
+            <label for="density">Spacing</label>
             <div class="slider-wrap">
-              <span>Spacious</span>
+              <span>🌊 Open &amp; Airy</span>
               <input id="density" type="range" min="0" max="100" value="24">
-              <span>Dense</span>
+              <span>Compact 📦</span>
             </div>
           </div>
 

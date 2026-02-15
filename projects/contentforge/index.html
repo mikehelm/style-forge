@@ -193,10 +193,11 @@
     }
     .btn-secondary:hover { background: color-mix(in srgb, var(--sf-surface) 76%, white 24%); }
     .btn-ghost {
-      background: transparent;
-      border-color: var(--sf-border);
-      color: var(--sf-muted);
+      background: color-mix(in srgb, var(--sf-surface) 45%, transparent);
+      border: 1.5px solid color-mix(in srgb, var(--sf-text) 38%, transparent);
+      color: var(--sf-text);
     }
+    .btn-ghost:hover { background: color-mix(in srgb, var(--sf-surface) 70%, transparent); border-color: color-mix(in srgb, var(--sf-text) 55%, transparent); }
 
     .device {
       width: min(100%, 310px);
@@ -301,18 +302,28 @@
       display: block;
     }
 
-    .pick-wrap { text-align: center; padding: 6px 0 2px; }
+    .pick-wrap { text-align: center; padding: 18px 0 8px; }
     .like-btn {
       border: 0;
       background: var(--sf-primary-gradient);
       color: #fff;
       font-weight: 800;
-      font-size: 17px;
-      letter-spacing: .01em;
-      padding: 14px 26px;
-      border-radius: calc(var(--sf-btn-radius) + 6px);
+      font-size: 18px;
+      letter-spacing: .02em;
+      padding: 18px 42px;
+      border-radius: calc(var(--sf-btn-radius) + 8px);
       cursor: pointer;
-      box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 35%, transparent);
+      box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 50%, transparent), 0 0 24px color-mix(in srgb, var(--sf-secondary) 30%, transparent);
+      transition: transform .2s ease, box-shadow .2s ease;
+      animation: likeGlow 2.2s ease-in-out infinite;
+    }
+    .like-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 44px color-mix(in srgb, var(--sf-primary) 50%, transparent);
+    }
+    @keyframes likeGlow {
+      0%,100% { box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 45%, transparent), 0 0 0 0px transparent; }
+      50% { box-shadow: 0 20px 52px color-mix(in srgb, var(--sf-primary) 55%, transparent), 0 0 0 6px color-mix(in srgb, var(--sf-primary) 16%, transparent), 0 0 28px color-mix(in srgb, var(--sf-secondary) 30%, transparent); }
     }
 
     .mixer {
@@ -398,6 +409,19 @@
       }
     }
 
+    .preview-panel[data-key="midnight"] h1 {
+      background: linear-gradient(135deg, #F0D98A 0%, #D4AF37 40%, #B8962E 70%, #F0D98A 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: goldShimmer 4s linear infinite;
+    }
+    @keyframes goldShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
     @keyframes meshMove {
       0% { background-position: 0% 35%, 80% 10%, 45% 90%; }
       100% { background-position: 14% 22%, 100% 40%, 20% 82%; }
@@ -431,7 +455,7 @@
   <script>
     const directions = {
       neon: {
-        name: 'Neon Creator', subtitle: 'High-energy creator funnels built for speed, trend cycles, and daily campaign launches.',
+        name: 'Neon Creator', subtitle: 'Go from idea to published video in under 5 minutes. Pick a template, customize your brand, export for TikTok or Reels — then list your editing skills and start earning.',
         colors: { '--sf-primary':'#00B7FF','--sf-secondary':'#FF2EC4','--sf-accent':'#7C5CFF','--sf-bg':'#0b0f18','--sf-surface':'#131a28','--sf-text':'#eef3ff','--sf-muted':'#95a3cc','--sf-border':'rgba(126,152,229,0.30)','--sf-primary-gradient':'linear-gradient(120deg, #00B7FF 0%, #FF2EC4 100%)','--sf-bg-mesh':'radial-gradient(circle at 8% 15%, rgba(0,183,255,.35), transparent 38%), radial-gradient(circle at 84% 20%, rgba(255,46,196,.25), transparent 35%), radial-gradient(circle at 50% 88%, rgba(124,92,255,.28), transparent 40%)' },
         typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
         vibe: { '--sf-card-radius':'18px','--sf-btn-radius':'12px','--sf-shadow':'0 12px 36px rgba(0,0,0,0.35)','--sf-anim-speed':'220ms' },
@@ -439,7 +463,7 @@
         tabGlow:'rgba(0,183,255,.45)'
       },
       clean: {
-        name: 'Clean Studio', subtitle: 'A crisp product-led system for teams that value clarity, trust, and effortless onboarding.',
+        name: 'Clean Studio', subtitle: 'Your video production workflow, simplified. Find templates, hire talent, and track what\'s working — in a workspace that stays out of your way.',
         colors: { '--sf-primary':'#4F8CFF','--sf-secondary':'#93B4FF','--sf-accent':'#2F6FE4','--sf-bg':'#f5f8fc','--sf-surface':'#ffffff','--sf-text':'#0f172a','--sf-muted':'#51607a','--sf-border':'rgba(17,56,121,0.14)','--sf-primary-gradient':'linear-gradient(120deg, #4F8CFF 0%, #2F6FE4 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 18%, rgba(79,140,255,.18), transparent 38%), radial-gradient(circle at 82% 16%, rgba(147,180,255,.28), transparent 35%), radial-gradient(circle at 56% 90%, rgba(47,111,228,.14), transparent 38%)' },
         typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
         vibe: { '--sf-card-radius':'14px','--sf-btn-radius':'10px','--sf-shadow':'0 8px 20px rgba(26,71,145,0.10)','--sf-anim-speed':'190ms' },
@@ -447,7 +471,7 @@
         tabGlow:'rgba(79,140,255,.38)'
       },
       sunset: {
-        name: 'Sunset Vibes', subtitle: 'Warm, creator-friendly conversion flows with personality, confidence, and softer visual rhythm.',
+        name: 'Sunset Vibes', subtitle: 'Make content that feels as good as it performs. A warm, inviting space for creators who want their brand to feel personal — not corporate.',
         colors: { '--sf-primary':'#FF6F61','--sf-secondary':'#FFBE55','--sf-accent':'#FFA63A','--sf-bg':'#fff5ee','--sf-surface':'#ffffff','--sf-text':'#302018','--sf-muted':'#7a5d4d','--sf-border':'rgba(164,79,56,0.18)','--sf-primary-gradient':'linear-gradient(120deg, #FF6F61 0%, #FFBE55 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 20%, rgba(255,111,97,.22), transparent 38%), radial-gradient(circle at 85% 18%, rgba(255,190,85,.30), transparent 34%), radial-gradient(circle at 56% 88%, rgba(255,166,58,.20), transparent 38%)' },
         typography: { '--sf-font-heading':"'Sora', sans-serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'700' },
         vibe: { '--sf-card-radius':'24px','--sf-btn-radius':'999px','--sf-shadow':'0 12px 28px rgba(168,91,47,0.14)','--sf-anim-speed':'210ms' },
@@ -455,7 +479,7 @@
         tabGlow:'rgba(255,111,97,.35)'
       },
       midnight: {
-        name: 'Midnight Pro', subtitle: 'Premium storytelling for enterprise buyers who expect polish, restraint, and authority.',
+        name: 'Midnight Pro', subtitle: 'For agencies and studios who deliver premium video at scale. Your clients expect excellence — your platform should reflect it.',
         colors: { '--sf-primary':'#D4AF37','--sf-secondary':'#17233f','--sf-accent':'#F0D98A','--sf-bg':'#0a1020','--sf-surface':'#101a30','--sf-text':'#f7f0dc','--sf-muted':'#bcae86','--sf-border':'rgba(240,217,138,0.33)','--sf-primary-gradient':'linear-gradient(120deg, #D4AF37 0%, #B8962E 52%, #8A6A1F 100%)','--sf-bg-mesh':'radial-gradient(circle at 11% 18%, rgba(212,175,55,.18), transparent 36%), radial-gradient(circle at 86% 20%, rgba(240,217,138,.12), transparent 32%), radial-gradient(circle at 56% 89%, rgba(23,35,63,.55), transparent 40%)' },
         typography: { '--sf-font-heading':"'Playfair Display', serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
         vibe: { '--sf-card-radius':'4px','--sf-btn-radius':'4px','--sf-shadow':'0 12px 34px rgba(2,5,12,.42)','--sf-anim-speed':'180ms' },
@@ -463,7 +487,7 @@
         tabGlow:'rgba(212,175,55,.43)'
       },
       fresh: {
-        name: 'Fresh Pop', subtitle: 'Bold, modern contrast for fast-moving teams that want punchy UI with minimal clutter.',
+        name: 'Fresh Pop', subtitle: 'Ship video campaigns at startup speed. No fluff, no clutter — just the tools you need to create, publish, and sell your video skills.',
         colors: { '--sf-primary':'#111111','--sf-secondary':'#B7FF00','--sf-accent':'#5F8F00','--sf-bg':'#ffffff','--sf-surface':'#ffffff','--sf-text':'#111111','--sf-muted':'#4b4b4b','--sf-border':'rgba(17,17,17,0.36)','--sf-primary-gradient':'linear-gradient(120deg, #111111 0%, #111111 100%)','--sf-bg-mesh':'radial-gradient(circle at 11% 14%, rgba(17,17,17,.04), transparent 35%), radial-gradient(circle at 88% 18%, rgba(183,255,0,.20), transparent 28%), radial-gradient(circle at 55% 85%, rgba(95,143,0,.11), transparent 36%)' },
         typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
         vibe: { '--sf-card-radius':'8px','--sf-btn-radius':'8px','--sf-shadow':'0 8px 24px rgba(10,10,10,0.08)','--sf-anim-speed':'170ms' },
@@ -515,26 +539,49 @@
                   <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
                   <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)" />
                   <rect x="102" y="20" width="76" height="7" rx="4" fill="var(--sf-border)"/>
-                  <rect x="36" y="62" width="208" height="86" rx="16" fill="url(#grad-${key})" opacity="0.92"/>
-                  <rect x="46" y="76" width="126" height="10" rx="5" fill="rgba(255,255,255,.9)"/>
-                  <rect x="46" y="93" width="95" height="8" rx="4" fill="rgba(255,255,255,.65)"/>
-                  <rect x="46" y="111" width="54" height="24" rx="12" fill="rgba(255,255,255,.9)"/>
-                  <rect x="36" y="164" width="92" height="72" rx="12" fill="color-mix(in srgb, var(--sf-secondary) 35%, var(--sf-surface))"/>
-                  <rect x="136" y="164" width="108" height="72" rx="12" fill="color-mix(in srgb, var(--sf-primary) 25%, var(--sf-surface))"/>
-                  <rect x="36" y="248" width="208" height="80" rx="14" fill="color-mix(in srgb, var(--sf-bg) 8%, var(--sf-surface))" stroke="var(--sf-border)"/>
-                  <path d="M52 300l36-22 30 18 45-32 24 11" stroke="var(--sf-primary)" stroke-width="4" fill="none"/>
-                  <rect x="36" y="340" width="208" height="134" rx="16" fill="color-mix(in srgb, var(--sf-bg) 6%, var(--sf-surface))" stroke="var(--sf-border)"/>
-                  <circle cx="62" cy="366" r="10" fill="var(--sf-secondary)"/>
-                  <rect x="80" y="360" width="130" height="10" rx="5" fill="var(--sf-text)" opacity=".75"/>
-                  <rect x="80" y="377" width="92" height="8" rx="4" fill="var(--sf-muted)" opacity=".55"/>
+                  <!-- Hero banner -->
+                  <rect x="36" y="62" width="208" height="78" rx="14" fill="url(#grad-${key})" opacity="0.92"/>
+                  <rect x="48" y="74" width="96" height="9" rx="4" fill="rgba(255,255,255,.9)"/>
+                  <rect x="48" y="88" width="142" height="7" rx="3" fill="rgba(255,255,255,.55)"/>
+                  <rect x="48" y="102" width="72" height="7" rx="3" fill="rgba(255,255,255,.55)"/>
+                  <rect x="48" y="118" width="52" height="14" rx="7" fill="rgba(255,255,255,.9)"/>
+                  <!-- Tab bar -->
+                  <rect x="36" y="150" width="208" height="28" rx="8" fill="color-mix(in srgb, var(--sf-bg) 12%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <rect x="42" y="155" width="44" height="18" rx="6" fill="var(--sf-primary)" opacity=".8"/>
+                  <rect x="90" y="158" width="32" height="12" rx="4" fill="var(--sf-muted)" opacity=".3"/>
+                  <rect x="128" y="158" width="32" height="12" rx="4" fill="var(--sf-muted)" opacity=".3"/>
+                  <rect x="166" y="158" width="32" height="12" rx="4" fill="var(--sf-muted)" opacity=".3"/>
+                  <!-- Video template cards -->
+                  <rect x="36" y="188" width="100" height="68" rx="10" fill="color-mix(in srgb, var(--sf-secondary) 25%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <polygon points="70,210 70,234 88,222" fill="rgba(255,255,255,.7)"/>
+                  <rect x="44" y="244" width="56" height="5" rx="2" fill="var(--sf-text)" opacity=".5"/>
+                  <rect x="144" y="188" width="100" height="68" rx="10" fill="color-mix(in srgb, var(--sf-primary) 20%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <polygon points="178,210 178,234 196,222" fill="rgba(255,255,255,.7)"/>
+                  <rect x="152" y="244" width="56" height="5" rx="2" fill="var(--sf-text)" opacity=".5"/>
+                  <!-- Analytics chart -->
+                  <rect x="36" y="268" width="208" height="74" rx="12" fill="color-mix(in srgb, var(--sf-bg) 8%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <rect x="44" y="276" width="60" height="6" rx="3" fill="var(--sf-text)" opacity=".5"/>
+                  <path d="M48 320l28-16 24 8 32-22 24 6 38-18" stroke="var(--sf-primary)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                  <path d="M48 320l28-16 24 8 32-22 24 6 38-18 v28 H48z" fill="var(--sf-primary)" opacity=".12"/>
+                  <!-- Creator profile cards -->
+                  <rect x="36" y="354" width="208" height="58" rx="12" fill="color-mix(in srgb, var(--sf-bg) 6%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <circle cx="58" cy="378" r="12" fill="var(--sf-secondary)" opacity=".7"/>
+                  <rect x="76" y="370" width="80" height="7" rx="3" fill="var(--sf-text)" opacity=".65"/>
+                  <rect x="76" y="382" width="56" height="5" rx="2" fill="var(--sf-muted)" opacity=".45"/>
+                  <rect x="76" y="393" width="32" height="12" rx="6" fill="var(--sf-primary)" opacity=".6"/>
+                  <rect x="36" y="420" width="208" height="58" rx="12" fill="color-mix(in srgb, var(--sf-bg) 6%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <circle cx="58" cy="444" r="12" fill="var(--sf-accent)" opacity=".7"/>
+                  <rect x="76" y="436" width="94" height="7" rx="3" fill="var(--sf-text)" opacity=".65"/>
+                  <rect x="76" y="448" width="68" height="5" rx="2" fill="var(--sf-muted)" opacity=".45"/>
+                  <rect x="76" y="459" width="32" height="12" rx="6" fill="var(--sf-primary)" opacity=".6"/>
                 </svg>
               </div>
             </div>
 
             <div class="features">
-              <article class="card">${icon('video')}<h3>Video Templates</h3><p>Ship platform-ready scripts, cuts, and thumbnail sets in minutes.</p></article>
-              <article class="card">${icon('people')}<h3>Talent Marketplace</h3><p>Match vetted creators to briefs based on niche, region, and CPM goals.</p></article>
-              <article class="card">${icon('chart')}<h3>Analytics Dashboard</h3><p>Track watch-through, ROAS, and production velocity in one live view.</p></article>
+              <article class="card">${icon('video')}<h3>Video Templates</h3><p>Pick a format, customize your brand, export for TikTok, Reels, or Shorts — ready to post in under 5 minutes.</p></article>
+              <article class="card">${icon('people')}<h3>Talent Marketplace</h3><p>Browse vetted editors, motion designers, and scriptwriters. Send a brief, get deliverables, pay securely — all in one place.</p></article>
+              <article class="card">${icon('chart')}<h3>Analytics Dashboard</h3><p>See which videos drive sales, which creators deliver ROI, and where to double down — with real-time data, not guesswork.</p></article>
             </div>
 
             <div class="component-strip">
