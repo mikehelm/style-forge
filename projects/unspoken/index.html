@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StyleForge · Unspoken Stage 2 Design Chooser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&family=Sora:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;700&family=Manrope:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sf-primary: #6C63FF;
+      --sf-secondary: #3D5AFE;
+      --sf-accent: #B388FF;
+      --sf-bg: #08090f;
+      --sf-surface: #111425;
+      --sf-text: #edf1ff;
+      --sf-muted: #a2add6;
+      --sf-border: rgba(155,145,255,.26);
+      --sf-primary-gradient: linear-gradient(130deg, #6C63FF 0%, #3D5AFE 100%);
+      --sf-bg-mesh: radial-gradient(circle at 12% 16%, rgba(108,99,255,.32), transparent 34%), radial-gradient(circle at 88% 20%, rgba(61,90,254,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(179,136,255,.21), transparent 40%);
+      --sf-font-heading: 'Space Grotesk', sans-serif;
+      --sf-font-body: 'Inter', sans-serif;
+      --sf-heading-weight: 700;
+      --sf-card-radius: 20px;
+      --sf-btn-radius: 14px;
+      --sf-shadow: 0 18px 40px rgba(0,0,0,.36);
+      --sf-anim-speed: 240ms;
+      --sf-spacing: 1.14;
+      --sf-grid-gap: 22px;
+      --sf-card-padding: 28px;
+      --sf-top-border: linear-gradient(90deg, var(--sf-primary), var(--sf-secondary), var(--sf-accent));
+      --tab-glow: rgba(108,99,255,.45);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--sf-font-body);
+      color: var(--sf-text);
+      background: linear-gradient(180deg, #05060b, #090b14 46%, #090c14 100%);
+      overflow-x: hidden;
+    }
+
+    .page { max-width: 1260px; margin: 0 auto; padding: 20px 18px 56px; }
+
+    .tabs-wrap {
+      position: sticky; top: 8px; z-index: 60;
+      backdrop-filter: blur(10px);
+      background: rgba(7,9,15,.72);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 16px; padding: 8px;
+      box-shadow: 0 10px 34px rgba(0,0,0,.3);
+    }
+    .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .tab {
+      border: 0; border-radius: 11px; cursor: pointer;
+      background: transparent; color: #d6defb; font-weight: 700; font-size: 13px;
+      letter-spacing: .01em; padding: 11px 8px 13px; transition: .2s ease;
+      position: relative;
+    }
+    .tab:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .tab.active { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+    .tab.active::after {
+      content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 3px; border-radius: 99px;
+      background: var(--sf-primary-gradient); box-shadow: 0 0 20px var(--tab-glow);
+    }
+
+    .preview-stage { position: relative; margin-top: 20px; min-height: 830px; }
+    .preview-panel {
+      position: absolute; inset: 0; opacity: 0; pointer-events: none;
+      transform: translateY(8px) scale(.997);
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+    .preview-panel.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); z-index: 2; }
+
+    .composition {
+      position: relative; overflow: hidden; isolation: isolate;
+      border-radius: 28px; border: 1px solid var(--sf-border);
+      background: var(--sf-bg); box-shadow: 0 28px 58px rgba(0,0,0,.35);
+      transform-style: preserve-3d;
+      transition: transform .4s ease;
+    }
+    .composition::before {
+      content: ""; position: absolute; inset: 0; background: var(--sf-bg-mesh); background-size: 180% 180%; z-index: 0;
+      animation: meshMove 16s ease-in-out infinite alternate;
+    }
+    .composition::after {
+      content: ""; position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 32%, rgba(0,0,0,.16));
+      pointer-events: none;
+    }
+    .particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    .particles i {
+      position: absolute; width: 4px; height: 4px; border-radius: 50%;
+      background: color-mix(in srgb, var(--sf-accent) 70%, white 30%);
+      opacity: .15; animation: drift var(--d, 14s) linear infinite; filter: blur(.2px);
+    }
+
+    .content { position: relative; z-index: 1; padding: calc(30px * var(--sf-spacing)); }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 26px; align-items: center; margin-bottom: 24px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 13px; border-radius: 999px;
+      font-size: 11px; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;
+      color: var(--sf-primary); border: 1px solid color-mix(in srgb, var(--sf-primary) 36%, transparent);
+      background: color-mix(in srgb, var(--sf-primary) 14%, transparent);
+      margin-bottom: 14px;
+    }
+    h1 {
+      margin: 0; font-size: clamp(42px, 6vw, 72px); line-height: .96;
+      font-family: var(--sf-font-heading); font-weight: var(--sf-heading-weight); letter-spacing: -.02em;
+      text-wrap: balance;
+    }
+    .subtitle { margin: 16px 0 24px; color: var(--sf-muted); font-size: clamp(16px, 2.1vw, 19px); line-height: 1.62; max-width: 62ch; }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      border-radius: var(--sf-btn-radius); border: 1px solid transparent; padding: 12px 16px;
+      font: 700 14px var(--sf-font-body); cursor: pointer; color: var(--sf-text);
+      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, filter var(--sf-anim-speed) ease, background var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--sf-primary-gradient); color: #fff; box-shadow: 0 10px 26px color-mix(in srgb, var(--sf-primary) 38%, transparent); }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.07); }
+    .btn-secondary { background: color-mix(in srgb, var(--sf-surface) 90%, white 10%); border-color: var(--sf-border); }
+    .btn-secondary:hover { background: color-mix(in srgb, var(--sf-surface) 82%, white 18%); }
+    .btn-ghost {
+      background: color-mix(in srgb, var(--sf-surface) 48%, transparent);
+      border-color: color-mix(in srgb, var(--sf-text) 45%, transparent);
+      color: var(--sf-text);
+    }
+    .btn-ghost:hover {
+      background: color-mix(in srgb, var(--sf-surface) 68%, transparent);
+      border-color: color-mix(in srgb, var(--sf-text) 62%, transparent);
+    }
+
+    .device {
+      width: min(100%, 320px); margin-left: auto; border-radius: 30px; padding: 14px;
+      background: color-mix(in srgb, var(--sf-surface) 86%, black 14%);
+      border: 1px solid var(--sf-border); box-shadow: var(--sf-shadow);
+    }
+
+    .features {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sf-grid-gap);
+      margin-bottom: 24px;
+    }
+    .card {
+      position: relative; overflow: hidden;
+      border-radius: var(--sf-card-radius); padding: var(--sf-card-padding);
+      background: color-mix(in srgb, var(--sf-surface) 88%, white 12%);
+      border: 1px solid var(--sf-border); box-shadow: var(--sf-shadow);
+      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
+    }
+    .card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--sf-top-border); opacity: 0; transition: opacity var(--sf-anim-speed) ease;
+    }
+    .card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--sf-primary) 50%, var(--sf-border)); box-shadow: 0 22px 46px color-mix(in srgb, var(--sf-primary) 22%, rgba(0,0,0,.3)); }
+    .card:hover::before { opacity: 1; }
+    .card.reveal { opacity: 0; transform: translateY(16px); }
+    .card.reveal.in { opacity: 1; transform: translateY(0); transition: 420ms ease; }
+
+    .icon-wrap {
+      width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 14px;
+      border-radius: calc(var(--sf-card-radius) * .56); border: 1px solid transparent;
+    }
+    .features .card:nth-child(1) .icon-wrap { background: color-mix(in srgb, var(--sf-primary) 14%, transparent); border-color: color-mix(in srgb, var(--sf-primary) 34%, transparent); }
+    .features .card:nth-child(2) .icon-wrap { background: color-mix(in srgb, var(--sf-secondary) 14%, transparent); border-color: color-mix(in srgb, var(--sf-secondary) 34%, transparent); }
+    .features .card:nth-child(3) .icon-wrap { background: color-mix(in srgb, var(--sf-accent) 14%, transparent); border-color: color-mix(in srgb, var(--sf-accent) 34%, transparent); }
+    .icon { width: 24px; height: 24px; }
+    .features .card:nth-child(1) .icon { color: var(--sf-primary); }
+    .features .card:nth-child(2) .icon { color: var(--sf-secondary); }
+    .features .card:nth-child(3) .icon { color: var(--sf-accent); }
+
+    .card h3 {
+      margin: 0 0 9px; font-size: 20px; line-height: 1.2;
+      font-family: var(--sf-font-heading); font-weight: min(calc(var(--sf-heading-weight) - 100), 700);
+    }
+    .card p { margin: 0; color: var(--sf-muted); line-height: 1.55; }
+
+    .component-strip {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 11px;
+      border-radius: calc(var(--sf-card-radius) - 4px); padding: 14px;
+      background: color-mix(in srgb, var(--sf-surface) 88%, white 12%);
+      border: 1px solid var(--sf-border); margin-bottom: 22px;
+    }
+    .mini-input {
+      min-width: 240px; border-radius: 10px; padding: 10px 12px; font: inherit;
+      border: 1px solid var(--sf-border);
+      color: var(--sf-text);
+      background: color-mix(in srgb, var(--sf-bg) 58%, white 42%);
+    }
+    .mini-input::placeholder { color: color-mix(in srgb, var(--sf-muted) 80%, transparent); }
+    .toggle {
+      width: 48px; height: 28px; border-radius: 99px; border: 1px solid var(--sf-border);
+      background: color-mix(in srgb, var(--sf-secondary) 36%, #646a80 64%); position: relative;
+    }
+    .toggle::after {
+      content: ""; position: absolute; top: 3px; left: 22px; width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatch { display: grid; gap: 4px; min-width: 76px; text-align: center; font-size: 11px; color: var(--sf-muted); }
+    .swatch i { width: 100%; height: 18px; border-radius: 999px; border: 1px solid rgba(0,0,0,.12); background: var(--color); }
+
+    .pick-wrap { text-align: center; padding: 8px 0 12px; }
+    .like-btn {
+      border: 0; cursor: pointer; color: #fff;
+      font: 800 18px var(--sf-font-body); letter-spacing: .02em;
+      padding: 18px 46px; border-radius: calc(var(--sf-btn-radius) + 12px);
+      background: var(--sf-primary-gradient);
+      box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 50%, transparent), 0 0 26px color-mix(in srgb, var(--sf-secondary) 30%, transparent);
+      animation: pulse 2.1s ease-in-out infinite;
+      transition: .2s ease;
+    }
+    .like-btn:hover { transform: translateY(-2px) scale(1.02); }
+
+    .mixer {
+      position: fixed; right: 14px; top: 88px; z-index: 70; width: min(330px, calc(100vw - 24px));
+      border-radius: 16px; border: 1px solid rgba(255,255,255,.18);
+      background: rgba(11,16,30,.68); backdrop-filter: blur(14px);
+      box-shadow: 0 14px 42px rgba(0,0,0,.36);
+      color: #eef2ff;
+      transform: translateY(8px) scale(.98); opacity: 0; pointer-events: none;
+      transition: .2s ease;
+    }
+    .mixer.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .mixer-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.14); }
+    .mixer h3 { margin: 0; font-size: 15px; }
+    .collapse { border: 0; background: transparent; color: #fff; font-weight: 700; cursor: pointer; border-radius: 8px; padding: 4px 6px; }
+    .mixer-body { padding: 12px 14px 14px; display: grid; gap: 9px; }
+    .mixer.collapsed .mixer-body { display: none; }
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 12px; font-weight: 700; color: #cad7fb; }
+    .field select {
+      width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.08); color: #fff; padding: 10px 11px; font: 600 14px Inter, sans-serif;
+    }
+    .summary { border-top: 1px solid rgba(255,255,255,.13); margin-top: 3px; padding-top: 9px; font-size: 12px; line-height: 1.45; color: #dce6ff; }
+    .copy {
+      width: 100%; border: 0; border-radius: 10px; padding: 10px;
+      background: linear-gradient(120deg, #5f8fff, #8e68ff); color: #fff; font-weight: 800; cursor: pointer;
+    }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 50%, transparent), 0 0 0 0 transparent; }
+      50% { box-shadow: 0 22px 48px color-mix(in srgb, var(--sf-primary) 60%, transparent), 0 0 0 7px color-mix(in srgb, var(--sf-primary) 16%, transparent), 0 0 30px color-mix(in srgb, var(--sf-secondary) 32%, transparent); }
+    }
+    /* Dreamscape: extra atmosphere */
+    .preview-panel[data-key="dream"] .composition::before {
+      filter: blur(40px) saturate(1.4);
+      opacity: 1;
+    }
+    .preview-panel[data-key="dream"] h1 {
+      font-style: italic;
+      background: linear-gradient(135deg, #818CF8, #F0ABFC 50%, #67E8F9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .preview-panel[data-key="dream"] .card {
+      backdrop-filter: blur(16px) saturate(1.3);
+      background: rgba(20,28,50,0.55);
+    }
+
+    @keyframes meshMove {
+      0% { background-position: 0% 24%, 84% 12%, 45% 90%; }
+      100% { background-position: 18% 20%, 100% 38%, 20% 82%; }
+    }
+    @keyframes drift {
+      from { transform: translateY(0) translateX(0); opacity: .08; }
+      50% { opacity: .22; }
+      to { transform: translateY(-26px) translateX(8px); opacity: .1; }
+    }
+
+    @media (max-width: 1050px) {
+      .tabs { grid-template-columns: 1fr 1fr; }
+      .preview-stage { min-height: auto; }
+      .preview-panel { position: relative; }
+      .hero { grid-template-columns: 1fr; }
+      .device { margin: 0; }
+      .features { grid-template-columns: 1fr; }
+      .mixer { position: sticky; top: 74px; right: auto; margin-top: 14px; width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: 0ms !important; scroll-behavior: auto !important; }
+      .card.reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
+    <section class="preview-stage" id="previewStage"></section>
+
+    <aside class="mixer" id="mixer">
+      <div class="mixer-head">
+        <h3>Mix & Match</h3>
+        <button class="collapse" id="collapseBtn">Collapse</button>
+      </div>
+      <div class="mixer-body">
+        <div class="field"><label for="colors">Colors</label><select id="colors"></select></div>
+        <div class="field"><label for="typography">Typography</label><select id="typography"></select></div>
+        <div class="field"><label for="vibe">Vibe</label><select id="vibe"></select></div>
+        <div class="field"><label for="layout">Layout</label><select id="layout"></select></div>
+        <div class="summary" id="summary"></div>
+        <button class="copy" id="copyTokens">📋 Copy Design Tokens</button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const directions = {
+      midnight: {
+        name: 'Midnight Vault', subtitle: "A private space for the things you've never said out loud. Share anonymously. Connect safely. No names, no traces, no judgment.",
+        colors: { '--sf-primary':'#6C63FF','--sf-secondary':'#3D5AFE','--sf-accent':'#B388FF','--sf-bg':'#08090f','--sf-surface':'#111425','--sf-text':'#edf1ff','--sf-muted':'#a2add6','--sf-border':'rgba(155,145,255,.26)','--sf-primary-gradient':'linear-gradient(130deg, #6C63FF 0%, #3D5AFE 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(108,99,255,.32), transparent 34%), radial-gradient(circle at 88% 20%, rgba(61,90,254,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(179,136,255,.21), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'20px','--sf-btn-radius':'14px','--sf-shadow':'0 18px 40px rgba(0,0,0,.36)','--sf-anim-speed':'240ms' },
+        layout: { '--sf-spacing':'1.14','--sf-grid-gap':'22px','--sf-card-padding':'28px' },
+        tabGlow:'rgba(108,99,255,.45)', badge:'Encrypted Safe Space'
+      },
+      whisper: {
+        name: 'Whisper Light', subtitle: 'Sometimes you just need someone to listen — without knowing who you are. Share your secrets in a space built for honesty and healing.',
+        colors: { '--sf-primary':'#6366F1','--sf-secondary':'#A5B4FC','--sf-accent':'#4F46E5','--sf-bg':'#f0f1fb','--sf-surface':'#ffffff','--sf-text':'#1e1b4b','--sf-muted':'#4b5076','--sf-border':'rgba(79,70,229,.22)','--sf-primary-gradient':'linear-gradient(130deg, #6366F1 0%, #818CF8 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(99,102,241,.22), transparent 36%), radial-gradient(circle at 88% 20%, rgba(165,180,252,.30), transparent 34%), radial-gradient(circle at 48% 84%, rgba(79,70,229,.16), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'16px','--sf-btn-radius':'12px','--sf-shadow':'0 12px 28px rgba(61,73,122,.12)','--sf-anim-speed':'220ms' },
+        layout: { '--sf-spacing':'1.18','--sf-grid-gap':'24px','--sf-card-padding':'30px' },
+        tabGlow:'rgba(124,140,248,.4)', badge:'Calm + Non-judgmental'
+      },
+      neon: {
+        name: 'Neon Confessional', subtitle: "Drop your secrets into the void. Read what others won't say in real life. Chat anonymously with strangers who actually get it.",
+        colors: { '--sf-primary':'#FF6B9D','--sf-secondary':'#C084FC','--sf-accent':'#22D3EE','--sf-bg':'#0a0a18','--sf-surface':'#121127','--sf-text':'#f5eeff','--sf-muted':'#c4b2df','--sf-border':'rgba(255,107,157,.3)','--sf-primary-gradient':'linear-gradient(130deg, #FF6B9D 0%, #C084FC 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(255,107,157,.3), transparent 34%), radial-gradient(circle at 88% 20%, rgba(192,132,252,.24), transparent 35%), radial-gradient(circle at 48% 84%, rgba(34,211,238,.2), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Sora', sans-serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'800' },
+        vibe: { '--sf-card-radius':'12px','--sf-btn-radius':'10px','--sf-shadow':'0 18px 42px rgba(0,0,0,.42)','--sf-anim-speed':'200ms' },
+        layout: { '--sf-spacing':'1.1','--sf-grid-gap':'22px','--sf-card-padding':'28px' },
+        tabGlow:'rgba(255,107,157,.45)', badge:'Bold, Youthful, Electric'
+      },
+      shadow: {
+        name: 'Shadow Protocol', subtitle: 'End-to-end anonymous. Zero tracking. Zero identity. Your secrets are yours — we just give you a place to let them out.',
+        colors: { '--sf-primary':'#10B981','--sf-secondary':'#1a1a2e','--sf-accent':'#34D399','--sf-bg':'#020204','--sf-surface':'#0a0e10','--sf-text':'#d9ffe9','--sf-muted':'#8cb9a7','--sf-border':'rgba(52,211,153,.28)','--sf-primary-gradient':'linear-gradient(130deg, #10B981 0%, #34D399 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 16%, rgba(16,185,129,.16), transparent 36%), radial-gradient(circle at 88% 20%, rgba(26,26,46,.4), transparent 34%), radial-gradient(circle at 48% 84%, rgba(52,211,153,.12), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'4px','--sf-btn-radius':'4px','--sf-shadow':'0 16px 34px rgba(0,0,0,.46)','--sf-anim-speed':'170ms' },
+        layout: { '--sf-spacing':'1.08','--sf-grid-gap':'20px','--sf-card-padding':'26px' },
+        tabGlow:'rgba(52,211,153,.44)', badge:'Terminal-grade Privacy'
+      },
+      dream: {
+        name: 'Dreamscape', subtitle: "Every secret is a story waiting to be told. Share yours anonymously and discover that you're never truly alone in what you carry.",
+        colors: { '--sf-primary':'#818CF8','--sf-secondary':'#F0ABFC','--sf-accent':'#67E8F9','--sf-bg':'#0c0f1a','--sf-surface':'#141c32','--sf-text':'#f2f4ff','--sf-muted':'#c4c9e6','--sf-border':'rgba(240,171,252,.24)','--sf-primary-gradient':'linear-gradient(130deg, #818CF8 0%, #F0ABFC 50%, #67E8F9 100%)','--sf-bg-mesh':'radial-gradient(ellipse at 12% 20%, rgba(129,140,248,.35), transparent 42%), radial-gradient(ellipse at 85% 15%, rgba(240,171,252,.30), transparent 40%), radial-gradient(ellipse at 50% 80%, rgba(103,232,249,.25), transparent 42%), radial-gradient(ellipse at 35% 50%, rgba(240,171,252,.12), transparent 50%)' },
+        typography: { '--sf-font-heading':"'Playfair Display', serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'24px','--sf-btn-radius':'999px','--sf-shadow':'0 18px 44px rgba(7,10,20,.42)','--sf-anim-speed':'240ms' },
+        layout: { '--sf-spacing':'1.16','--sf-grid-gap':'24px','--sf-card-padding':'30px' },
+        tabGlow:'rgba(129,140,248,.46)', badge:'Poetic + Ethereal'
+      }
+    };
+
+    const order = ['midnight','whisper','neon','shadow','dream'];
+    const state = { active: 'midnight', base: null, colors: 'midnight', typography: 'midnight', vibe: 'midnight', layout: 'midnight', panelVisible: false, collapsed: false };
+
+    const tabsEl = document.getElementById('tabs');
+    const stageEl = document.getElementById('previewStage');
+    const mixer = document.getElementById('mixer');
+    const summary = document.getElementById('summary');
+
+    const features = [
+      {
+        title: 'Anonymous Posts',
+        text: 'Write what\'s really on your mind. No account needed, no name attached. Your secret gets a random identity — completely untraceable.',
+        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M9 13s1.5 2 3 2 3-2 3-2"/></svg>`
+      },
+      {
+        title: 'Private Chat',
+        text: 'Someone resonated with your secret? Start an encrypted conversation. Both sides stay anonymous — talk freely without fear.',
+        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/><rect x="9" y="9" width="6" height="5" rx="1"/><path d="M10 9V7a2 2 0 014 0v2"/></svg>`
+      },
+      {
+        title: 'Community Reactions',
+        text: 'React, comment, and support others without revealing yourself. Build real connections from behind the safety of anonymity.',
+        icon: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A4.5 4.5 0 0112 5a4.5 4.5 0 018 5.2c0 7.3-8 11.8-8 11.8z"/><path d="M12 13v-2m0 0V9"/></svg>`
+      }
+    ];
+
+    function makeParticles() {
+      return new Array(22).fill(0).map((_, i) => `<i style="left:${(i * 37) % 100}%;top:${(i * 53) % 100}%;--d:${10 + (i % 9)}s"></i>`).join('');
+    }
+
+    function phoneMockup(key) {
+      if (key === 'whisper') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Whisper light chat mockup" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
+        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
+        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
+        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
+        <rect x="36" y="62" width="208" height="46" rx="14" fill="url(#g-${key})" opacity=".9"/>
+        <rect x="48" y="76" width="82" height="8" rx="4" fill="rgba(255,255,255,.95)"/>
+        <rect x="48" y="90" width="122" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+        <rect x="36" y="122" width="145" height="36" rx="12" fill="color-mix(in srgb, var(--sf-primary) 20%, white 80%)"/>
+        <rect x="46" y="136" width="108" height="7" rx="4" fill="var(--sf-text)" opacity=".7"/>
+        <rect x="99" y="168" width="145" height="36" rx="12" fill="color-mix(in srgb, var(--sf-secondary) 16%, white 84%)"/>
+        <rect x="110" y="182" width="106" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
+        <rect x="36" y="214" width="154" height="36" rx="12" fill="color-mix(in srgb, var(--sf-accent) 15%, white 85%)"/>
+        <rect x="46" y="228" width="112" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
+        <rect x="36" y="430" width="208" height="52" rx="14" fill="color-mix(in srgb, var(--sf-bg) 10%, var(--sf-surface))" stroke="var(--sf-border)"/>
+        <rect x="48" y="447" width="138" height="16" rx="8" fill="rgba(127,140,250,.22)"/>
+        <circle cx="223" cy="456" r="13" fill="var(--sf-primary)"/>
+      </svg>`;
+
+      if (key === 'shadow') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Shadow protocol terminal mockup" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="264" height="524" rx="40" fill="#020204" stroke="var(--sf-border)"/>
+        <rect x="22" y="42" width="236" height="458" rx="20" fill="#070b0d"/>
+        <rect x="100" y="20" width="80" height="7" rx="3" fill="var(--sf-border)"/>
+        <rect x="36" y="62" width="208" height="30" rx="3" fill="#060a08" stroke="var(--sf-border)"/>
+        <rect x="46" y="72" width="60" height="8" rx="2" fill="var(--sf-primary)" opacity=".8"/>
+        <rect x="36" y="104" width="208" height="296" rx="3" fill="#030503" stroke="var(--sf-border)"/>
+        <rect x="46" y="118" width="40" height="4" rx="1" fill="var(--sf-primary)"/><rect x="90" y="118" width="116" height="4" rx="1" fill="var(--sf-muted)" opacity=".5"/>
+        <rect x="46" y="136" width="86" height="4" rx="1" fill="var(--sf-primary)" opacity=".75"/><rect x="136" y="136" width="70" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
+        <rect x="46" y="154" width="36" height="4" rx="1" fill="var(--sf-primary)"/><rect x="86" y="154" width="108" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
+        <rect x="46" y="186" width="140" height="28" rx="2" fill="#07120d" stroke="var(--sf-border)"/>
+        <rect x="56" y="198" width="94" height="4" rx="1" fill="var(--sf-primary)" opacity=".8"/>
+        <rect x="46" y="222" width="180" height="28" rx="2" fill="#07120d" stroke="var(--sf-border)"/>
+        <rect x="56" y="234" width="126" height="4" rx="1" fill="var(--sf-accent)" opacity=".8"/>
+        <rect x="36" y="412" width="208" height="70" rx="4" fill="#060a08" stroke="var(--sf-border)"/>
+        <rect x="48" y="430" width="74" height="8" rx="2" fill="var(--sf-primary)"/><rect x="48" y="445" width="188" height="4" rx="1" fill="var(--sf-muted)" opacity=".45"/>
+      </svg>`;
+
+      if (key === 'dream') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Dreamscape floating bubble cards mockup" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
+        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
+        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
+        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
+        <rect x="36" y="62" width="208" height="78" rx="22" fill="url(#g-${key})" opacity=".86"/>
+        <rect x="48" y="78" width="102" height="8" rx="4" fill="rgba(255,255,255,.94)"/>
+        <rect x="48" y="92" width="144" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+        <rect x="48" y="104" width="80" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+        <rect x="36" y="156" width="172" height="64" rx="24" fill="rgba(255,255,255,.11)" stroke="var(--sf-border)"/>
+        <rect x="48" y="177" width="120" height="7" rx="4" fill="var(--sf-text)" opacity=".66"/>
+        <rect x="92" y="230" width="152" height="58" rx="22" fill="rgba(255,255,255,.09)" stroke="var(--sf-border)"/>
+        <rect x="104" y="250" width="102" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
+        <rect x="36" y="298" width="196" height="62" rx="24" fill="rgba(255,255,255,.1)" stroke="var(--sf-border)"/>
+        <rect x="48" y="320" width="136" height="7" rx="4" fill="var(--sf-text)" opacity=".62"/>
+      </svg>`;
+
+      if (key === 'neon') return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Neon confessional feed mockup" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1"><stop offset="0%" stop-color="#FF6B9D"/><stop offset="100%" stop-color="#C084FC"/></linearGradient>
+          <linearGradient id="g2" x1="0" x2="1"><stop offset="0%" stop-color="#C084FC"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient>
+        </defs>
+        <rect x="8" y="8" width="264" height="524" rx="40" fill="#090816" stroke="var(--sf-border)"/>
+        <rect x="22" y="42" width="236" height="458" rx="28" fill="#100d22"/>
+        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
+        <rect x="36" y="62" width="208" height="34" rx="10" fill="#151333" stroke="var(--sf-border)"/>
+        <rect x="44" y="73" width="84" height="10" rx="5" fill="var(--sf-primary)"/>
+        <rect x="36" y="108" width="208" height="78" rx="12" fill="url(#g1)" opacity=".9"/>
+        <rect x="48" y="124" width="146" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
+        <rect x="48" y="138" width="104" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+        <rect x="36" y="196" width="208" height="78" rx="12" fill="url(#g2)" opacity=".9"/>
+        <rect x="48" y="212" width="124" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
+        <rect x="48" y="226" width="148" height="6" rx="3" fill="rgba(255,255,255,.6)"/>
+        <rect x="36" y="284" width="208" height="78" rx="12" fill="url(#g1)" opacity=".85"/>
+        <rect x="48" y="300" width="130" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
+      </svg>`;
+
+      return `<svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Midnight vault anonymous feed mockup" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g-${key}" x1="0" x2="1"><stop offset="0%" stop-color="var(--sf-primary)"/><stop offset="100%" stop-color="var(--sf-secondary)"/></linearGradient></defs>
+        <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
+        <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)"/>
+        <rect x="104" y="20" width="72" height="7" rx="4" fill="var(--sf-border)"/>
+        <rect x="36" y="62" width="208" height="38" rx="10" fill="url(#g-${key})" opacity=".92"/>
+        <rect x="48" y="75" width="112" height="8" rx="4" fill="rgba(255,255,255,.92)"/>
+        <rect x="36" y="114" width="208" height="88" rx="16" fill="rgba(255,255,255,.05)" stroke="var(--sf-border)"/>
+        <circle cx="58" cy="140" r="12" fill="var(--sf-accent)" opacity=".8"/>
+        <rect x="76" y="132" width="112" height="7" rx="3" fill="var(--sf-text)" opacity=".68"/>
+        <rect x="76" y="144" width="136" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
+        <rect x="76" y="154" width="86" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
+        <rect x="36" y="214" width="208" height="88" rx="16" fill="rgba(255,255,255,.05)" stroke="var(--sf-border)"/>
+        <circle cx="58" cy="240" r="12" fill="var(--sf-primary)" opacity=".8"/>
+        <rect x="76" y="232" width="128" height="7" rx="3" fill="var(--sf-text)" opacity=".68"/>
+        <rect x="76" y="244" width="124" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
+        <rect x="76" y="254" width="96" height="5" rx="2" fill="var(--sf-muted)" opacity=".5"/>
+      </svg>`;
+    }
+
+    function makePanel(key) {
+      const d = directions[key];
+      const panel = document.createElement('article');
+      panel.className = `preview-panel${key === state.active ? ' active' : ''}`;
+      panel.dataset.key = key;
+      panel.innerHTML = `
+      <div class="composition">
+        <div class="particles">${makeParticles()}</div>
+        <div class="content">
+          <div class="hero">
+            <div>
+              <div class="eyebrow">${d.badge}</div>
+              <h1>Unspoken</h1>
+              <p class="subtitle">${d.subtitle}</p>
+              <div class="hero-actions">
+                <button class="btn btn-primary">Share a Secret</button>
+                <button class="btn btn-secondary customize">Customize →</button>
+              </div>
+            </div>
+            <div class="device">${phoneMockup(key)}</div>
+          </div>
+
+          <div class="features">
+            ${features.map(f => `<article class="card reveal"><div class="icon-wrap">${f.icon}</div><h3>${f.title}</h3><p>${f.text}</p></article>`).join('')}
+          </div>
+
+          <div class="component-strip">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <input class="mini-input" placeholder="Write anonymously…" aria-label="Sample input" />
+            <div class="toggle" aria-hidden="true"></div>
+            <div class="swatches">
+              <span class="swatch"><i style="--color:var(--sf-primary)"></i><b>Primary</b><span data-token="--sf-primary"></span></span>
+              <span class="swatch"><i style="--color:var(--sf-secondary)"></i><b>Secondary</b><span data-token="--sf-secondary"></span></span>
+              <span class="swatch"><i style="--color:var(--sf-accent)"></i><b>Accent</b><span data-token="--sf-accent"></span></span>
+            </div>
+          </div>
+
+          <div class="pick-wrap">
+            <button class="like-btn" data-like="${key}">I Like This One</button>
+          </div>
+        </div>
+      </div>`;
+      return panel;
+    }
+
+    function setVars(el, vars) { Object.entries(vars).forEach(([k,v]) => el.style.setProperty(k, v)); }
+
+    function applyToPanel(panelKey) {
+      const panel = stageEl.querySelector(`.preview-panel[data-key="${panelKey}"] .composition`);
+      if (!panel) return;
+      setVars(panel, directions[state.colors].colors);
+      setVars(panel, directions[state.typography].typography);
+      setVars(panel, directions[state.vibe].vibe);
+      setVars(panel, directions[state.layout].layout);
+      document.documentElement.style.setProperty('--tab-glow', directions[state.colors].tabGlow);
+      document.documentElement.style.setProperty('--sf-primary-gradient', directions[state.colors].colors['--sf-primary-gradient']);
+      panel.querySelectorAll('[data-token]').forEach(el => {
+        const token = el.getAttribute('data-token');
+        el.textContent = directions[state.colors].colors[token] || '';
+      });
+      revealCards(panel);
+    }
+
+    function revealCards(panel) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cards = panel.querySelectorAll('.card.reveal');
+      cards.forEach((c, i) => setTimeout(() => c.classList.add('in'), 80 + i * 90));
+    }
+
+    function refreshTabs() { tabsEl.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.active)); }
+
+    function renderSummary() {
+      summary.textContent = `Base: ${state.base ? directions[state.base].name : 'Not selected'} | Colors: ${directions[state.colors].name} | Typography: ${directions[state.typography].name} | Vibe: ${directions[state.vibe].name} | Layout: ${directions[state.layout].name}`;
+    }
+
+    function showMixer() { state.panelVisible = true; mixer.classList.add('visible'); }
+
+    function syncSelects() {
+      ['colors','typography','vibe','layout'].forEach(id => document.getElementById(id).value = state[id]);
+      renderSummary();
+    }
+
+    function setActive(key) {
+      state.active = key;
+      stageEl.querySelectorAll('.preview-panel').forEach(p => p.classList.toggle('active', p.dataset.key === key));
+      refreshTabs();
+      if (!state.base) {
+        state.colors = state.typography = state.vibe = state.layout = key;
+        syncSelects();
+      }
+      applyToPanel(key);
+    }
+
+    function copyTokens() {
+      const payload = {
+        base: state.base ? directions[state.base].name : null,
+        selections: {
+          colors: directions[state.colors].name,
+          typography: directions[state.typography].name,
+          vibe: directions[state.vibe].name,
+          layout: directions[state.layout].name
+        },
+        tokens: {
+          ...directions[state.colors].colors,
+          ...directions[state.typography].typography,
+          ...directions[state.vibe].vibe,
+          ...directions[state.layout].layout
+        }
+      };
+      navigator.clipboard.writeText(JSON.stringify(payload, null, 2)).then(() => {
+        const btn = document.getElementById('copyTokens');
+        const old = btn.textContent;
+        btn.textContent = '✅ Copied';
+        setTimeout(() => btn.textContent = old, 1200);
+      });
+    }
+
+    function boot() {
+      tabsEl.innerHTML = order.map(key => `<button class="tab${key === state.active ? ' active' : ''}" data-key="${key}">${directions[key].name}</button>`).join('');
+      stageEl.innerHTML = '';
+      order.forEach(key => stageEl.appendChild(makePanel(key)));
+
+      ['colors','typography','vibe','layout'].forEach(id => {
+        const sel = document.getElementById(id);
+        sel.innerHTML = order.map(key => `<option value="${key}">${directions[key].name}</option>`).join('');
+        sel.addEventListener('change', e => { state[id] = e.target.value; applyToPanel(state.active); renderSummary(); });
+      });
+
+      tabsEl.addEventListener('click', e => {
+        const btn = e.target.closest('.tab');
+        if (!btn) return;
+        setActive(btn.dataset.key);
+      });
+
+      stageEl.addEventListener('click', e => {
+        if (e.target.closest('.customize')) showMixer();
+        const like = e.target.closest('[data-like]');
+        if (!like) return;
+        const k = like.dataset.like;
+        state.base = k;
+        state.colors = state.typography = state.vibe = state.layout = k;
+        setActive(k);
+        showMixer();
+        syncSelects();
+      });
+
+      document.getElementById('copyTokens').addEventListener('click', copyTokens);
+      document.getElementById('collapseBtn').addEventListener('click', () => {
+        state.collapsed = !state.collapsed;
+        mixer.classList.toggle('collapsed', state.collapsed);
+        document.getElementById('collapseBtn').textContent = state.collapsed ? 'Expand' : 'Collapse';
+      });
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in'); });
+        }, { threshold: .2 });
+        stageEl.querySelectorAll('.card.reveal').forEach(c => observer.observe(c));
+      }
+
+      setActive('midnight');
+      applyToPanel('midnight');
+      syncSelects();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
