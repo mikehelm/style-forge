@@ -227,12 +227,28 @@
       padding: var(--sf-card-padding);
       box-shadow: var(--sf-shadow);
       transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--sf-primary-gradient);
+      opacity: 0;
+      transition: opacity var(--sf-anim-speed) ease;
     }
     .card:hover {
-      transform: translateY(-4px);
-      border-color: color-mix(in srgb, var(--sf-primary) 45%, var(--sf-border));
-      box-shadow: 0 18px 36px color-mix(in srgb, var(--sf-primary) 22%, rgba(0,0,0,.25));
+      transform: translateY(-5px);
+      border-color: color-mix(in srgb, var(--sf-primary) 50%, var(--sf-border));
+      box-shadow: 0 20px 42px color-mix(in srgb, var(--sf-primary) 24%, rgba(0,0,0,.28));
     }
+    .card:hover::before { opacity: 1; }
+    .features .card:nth-child(2) .icon-wrap { background: color-mix(in srgb, var(--sf-secondary) 14%, transparent); border-color: color-mix(in srgb, var(--sf-secondary) 30%, transparent); }
+    .features .card:nth-child(2) .icon { color: var(--sf-secondary); }
+    .features .card:nth-child(3) .icon-wrap { background: color-mix(in srgb, var(--sf-accent) 14%, transparent); border-color: color-mix(in srgb, var(--sf-accent) 30%, transparent); }
+    .features .card:nth-child(3) .icon { color: var(--sf-accent); }
     .icon-wrap {
       width: 44px; height: 44px;
       display: grid; place-items: center;
