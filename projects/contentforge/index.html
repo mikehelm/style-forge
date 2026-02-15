@@ -144,12 +144,17 @@
       margin-bottom: 18px;
     }
     .eyebrow {
-      font-size: 12px;
+      display: inline-block;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--sf-muted);
-      margin-bottom: 10px;
+      letter-spacing: .14em;
+      color: var(--sf-primary);
+      margin-bottom: 12px;
       font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--sf-primary) 30%, transparent);
+      background: color-mix(in srgb, var(--sf-primary) 8%, transparent);
     }
     h1 {
       margin: 0;
@@ -224,14 +229,21 @@
       transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
     }
     .card:hover {
-      transform: translateY(-3px);
-      border-color: color-mix(in srgb, var(--sf-primary) 35%, var(--sf-border));
-      box-shadow: 0 14px 28px color-mix(in srgb, var(--sf-primary) 17%, rgba(0,0,0,.2));
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--sf-primary) 45%, var(--sf-border));
+      box-shadow: 0 18px 36px color-mix(in srgb, var(--sf-primary) 22%, rgba(0,0,0,.25));
+    }
+    .icon-wrap {
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      border-radius: calc(var(--sf-card-radius) * 0.6);
+      background: color-mix(in srgb, var(--sf-primary) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--sf-primary) 30%, transparent);
+      margin-bottom: 14px;
     }
     .icon {
-      width: 28px; height: 28px;
+      width: 24px; height: 24px;
       color: var(--sf-primary);
-      margin-bottom: 12px;
     }
     .card h3 {
       margin: 0 0 8px;
@@ -579,9 +591,9 @@
             </div>
 
             <div class="features">
-              <article class="card">${icon('video')}<h3>Video Templates</h3><p>Pick a format, customize your brand, export for TikTok, Reels, or Shorts — ready to post in under 5 minutes.</p></article>
-              <article class="card">${icon('people')}<h3>Talent Marketplace</h3><p>Browse vetted editors, motion designers, and scriptwriters. Send a brief, get deliverables, pay securely — all in one place.</p></article>
-              <article class="card">${icon('chart')}<h3>Analytics Dashboard</h3><p>See which videos drive sales, which creators deliver ROI, and where to double down — with real-time data, not guesswork.</p></article>
+              <article class="card"><div class="icon-wrap">${icon('video')}</div><h3>Video Templates</h3><p>Pick a format, customize your brand, export for TikTok, Reels, or Shorts — ready to post in under 5 minutes.</p></article>
+              <article class="card"><div class="icon-wrap">${icon('people')}</div><h3>Talent Marketplace</h3><p>Browse vetted editors, motion designers, and scriptwriters. Send a brief, get deliverables, pay securely — all in one place.</p></article>
+              <article class="card"><div class="icon-wrap">${icon('chart')}</div><h3>Analytics Dashboard</h3><p>See which videos drive sales, which creators deliver ROI, and where to double down — with real-time data, not guesswork.</p></article>
             </div>
 
             <div class="component-strip">
