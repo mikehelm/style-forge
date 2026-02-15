@@ -3,1136 +3,682 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StyleForge — Stage 2 Design Chooser</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <title>StyleForge · Stage 2 Design Chooser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&family=Sora:wght@700&family=Plus+Jakarta+Sans:wght@400;500;700&family=Manrope:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <style>
     :root {
+      --sf-primary: #00B7FF;
+      --sf-secondary: #FF2EC4;
+      --sf-accent: #7C5CFF;
       --sf-bg: #0b0f18;
-      --sf-surface: #141a2a;
-      --sf-surface-2: #1a2134;
-      --sf-surface-3: #242c43;
-      --sf-text: #edf2ff;
-      --sf-muted: #a1add1;
-      --sf-border: rgba(135, 159, 228, 0.28);
-      --sf-primary: #13b9ff;
-      --sf-secondary: #ff36c8;
-      --sf-accent: #7e5fff;
-      --sf-destructive: #ff5a70;
-      --sf-ring: rgba(19,185,255,.38);
-
-      --sf-font-heading: 'Space Grotesk', Inter, sans-serif;
-      --sf-font-body: 'Inter', system-ui, sans-serif;
-      --sf-font-h1: clamp(2.2rem, 5.8vw, 4.6rem);
-      --sf-font-h2: clamp(1.6rem, 3.8vw, 2.6rem);
-      --sf-font-h3: clamp(1.15rem, 2.4vw, 1.55rem);
-      --sf-font-body-size: 1rem;
+      --sf-surface: #131a28;
+      --sf-text: #eef3ff;
+      --sf-muted: #95a3cc;
+      --sf-border: rgba(126,152,229,0.3);
+      --sf-primary-gradient: linear-gradient(120deg, #00B7FF 0%, #FF2EC4 100%);
+      --sf-bg-mesh: radial-gradient(circle at 8% 15%, rgba(0,183,255,.35), transparent 38%), radial-gradient(circle at 84% 20%, rgba(255,46,196,.25), transparent 35%), radial-gradient(circle at 50% 88%, rgba(124,92,255,.28), transparent 40%);
+      --sf-font-heading: 'Space Grotesk', sans-serif;
+      --sf-font-body: 'Inter', sans-serif;
       --sf-heading-weight: 800;
-      --sf-body-weight: 500;
-
-      --sf-btn-radius: 12px;
-      --sf-btn-border: 1px solid var(--sf-border);
-      --sf-btn-primary-bg: linear-gradient(135deg, #13b9ff, #ff36c8);
-      --sf-btn-primary-text: #ffffff;
-      --sf-btn-secondary-bg: color-mix(in srgb, var(--sf-primary) 16%, transparent);
-      --sf-btn-ghost-bg: transparent;
-      --sf-btn-destructive-bg: linear-gradient(145deg, #ff5a70, #ff3f55);
-      --sf-btn-hover-lift: translateY(-2px) scale(1.01);
-      --sf-btn-active-lift: translateY(0) scale(.99);
-
       --sf-card-radius: 18px;
-      --sf-card-bg: linear-gradient(180deg, color-mix(in srgb, var(--sf-surface-2) 86%, transparent), color-mix(in srgb, var(--sf-surface) 96%, transparent));
-      --sf-card-border: 1px solid var(--sf-border);
-      --sf-card-shadow: 0 18px 42px rgba(0,0,0,.33);
-
-      --sf-space-scale: 1;
-      --sf-gap-1: calc(12px * var(--sf-space-scale));
-      --sf-gap-2: calc(18px * var(--sf-space-scale));
-      --sf-gap-3: calc(24px * var(--sf-space-scale));
-      --sf-gap-4: calc(32px * var(--sf-space-scale));
-      --sf-wrap: 1180px;
-
-      --sf-icon-stroke: 1.8;
-      --sf-icon-corner: round;
-      --sf-icon-bg: color-mix(in srgb, var(--sf-primary) 14%, transparent);
-      --sf-icon-mode: outlined;
-
-      --sf-anim-level: 1;
-      --sf-anim-duration: 0.55s;
-      --sf-anim-ease: cubic-bezier(.2,.7,.2,1);
-
-      --sf-hero-overlay:
-        radial-gradient(1200px 560px at 10% 0%, rgba(19,185,255,.22), transparent 55%),
-        radial-gradient(920px 520px at 90% 4%, rgba(255,54,200,.22), transparent 58%);
-      --sf-gold-grad: linear-gradient(140deg, #f7e1a3 0%, #d7b157 35%, #a37b27 72%, #f3de9d 100%);
-
-      --sf-panel-blur: blur(18px) saturate(1.35);
-      --sf-panel-bg: rgba(12, 17, 30, 0.56);
-      --sf-is-light: 0;
+      --sf-btn-radius: 12px;
+      --sf-shadow: 0 12px 36px rgba(0,0,0,0.35);
+      --sf-anim-speed: 220ms;
+      --sf-spacing: 1;
+      --sf-grid-gap: 18px;
+      --sf-card-padding: 24px;
+      --tab-glow: rgba(0,183,255,.45);
     }
 
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: var(--sf-bg);
-      color: var(--sf-text);
       font-family: var(--sf-font-body);
-      font-size: var(--sf-font-body-size);
-      line-height: 1.58;
-      transition: background .26s ease, color .26s ease;
+      color: var(--sf-text);
+      background: linear-gradient(180deg, #070c16, #0d1323 40%, #0c1220 100%);
+      min-height: 100vh;
     }
 
-    h1,h2,h3 { margin: 0; letter-spacing: -.02em; font-family: var(--sf-font-heading); font-weight: var(--sf-heading-weight); }
-    h1 { font-size: var(--sf-font-h1); line-height: .94; }
-    h2 { font-size: var(--sf-font-h2); line-height: 1.04; }
-    h3 { font-size: var(--sf-font-h3); line-height: 1.2; }
-    p { margin: 0; }
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 20px 18px 48px;
+      position: relative;
+    }
 
-    .app-bg {
-      position: fixed; inset: 0; z-index: -3;
-      background: var(--sf-hero-overlay);
-      transition: background .35s ease;
+    .tabs-wrap {
+      position: sticky;
+      top: 8px;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,18,.78);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 8px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.32);
+    }
+
+    .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .tab {
+      border: 0;
+      background: transparent;
+      color: #d6e2ff;
+      padding: 12px 10px 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      cursor: pointer;
+      position: relative;
+      transition: all .2s ease;
+    }
+    .tab:hover { background: rgba(255,255,255,.05); color: #fff; }
+    .tab.active {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.14);
+    }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 14px; right: 14px; bottom: 4px;
+      height: 3px;
+      border-radius: 4px;
+      background: var(--sf-primary-gradient);
+      box-shadow: 0 0 18px var(--tab-glow);
+    }
+
+    .preview-stage { position: relative; margin-top: 18px; min-height: 740px; }
+    .preview-panel {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+    .preview-panel.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      z-index: 2;
+    }
+
+    .composition {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--sf-border);
+      background: var(--sf-bg);
+      box-shadow: 0 16px 42px rgba(0,0,0,.28);
+      position: relative;
+      isolation: isolate;
+    }
+    .composition::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--sf-bg-mesh);
+      background-size: 170% 170%;
+      animation: meshMove 14s ease-in-out infinite alternate;
+      opacity: .95;
+      z-index: 0;
+    }
+    .composition::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 30%, rgba(0,0,0,.12));
+      z-index: 0;
       pointer-events: none;
     }
 
-    .tabs {
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-      max-width: var(--sf-wrap);
-      margin: 14px auto 0;
-      padding: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      border-radius: 14px;
-      border: 1px solid var(--sf-border);
-      background: color-mix(in srgb, var(--sf-surface) 82%, transparent);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 12px 34px rgba(0,0,0,.24);
-    }
-
-    .tab {
-      border: 1px solid var(--sf-border);
-      background: transparent;
-      color: var(--sf-text);
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: .88rem;
-      cursor: pointer;
-      transition: transform .2s ease, background .2s ease, border-color .2s ease;
-    }
-    .tab:hover { transform: translateY(-1px); border-color: var(--sf-primary); }
-    .tab.active {
-      border-color: color-mix(in srgb, var(--sf-primary) 68%, var(--sf-border));
-      background: linear-gradient(135deg, color-mix(in srgb, var(--sf-primary) 22%, transparent), color-mix(in srgb, var(--sf-secondary) 20%, transparent));
-      box-shadow: 0 0 0 3px var(--sf-ring);
-    }
-
-    .wrap {
-      max-width: var(--sf-wrap);
-      margin: 14px auto 60px;
-      padding: 0 var(--sf-gap-3);
-      display: grid;
-      gap: var(--sf-gap-2);
-    }
-
-    .section-card {
-      border: var(--sf-card-border);
-      border-radius: calc(var(--sf-card-radius) + 2px);
-      background: var(--sf-card-bg);
-      box-shadow: var(--sf-card-shadow);
-      padding: var(--sf-gap-3);
-      position: relative;
-      overflow: clip;
-    }
-
-    .section-label {
-      margin-bottom: 12px;
-      font-size: .74rem;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--sf-muted);
-      font-weight: 800;
-    }
+    .content { position: relative; z-index: 1; padding: calc(28px * var(--sf-spacing)); }
 
     .hero {
-      min-height: min(78vh, 760px);
       display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 22px;
       align-items: center;
-      position: relative;
+      margin-bottom: 18px;
     }
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      border-radius: calc(var(--sf-card-radius) + 2px);
-      opacity: .95;
-    }
-    .hero-inner { max-width: 760px; display: grid; gap: 14px; }
-    .kicker {
-      display: inline-flex;
-      width: fit-content;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: .74rem;
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--sf-muted);
+      margin-bottom: 10px;
       font-weight: 700;
-      letter-spacing: .04em;
-      border: 1px solid color-mix(in srgb, var(--sf-primary) 52%, var(--sf-border));
-      background: color-mix(in srgb, var(--sf-primary) 14%, transparent);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: .98;
+      font-family: var(--sf-font-heading);
+      font-weight: var(--sf-heading-weight);
+      color: var(--sf-text);
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      margin: 14px 0 20px;
+      color: var(--sf-muted);
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.5;
+      max-width: 60ch;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: var(--sf-btn-radius);
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, filter var(--sf-anim-speed) ease, background var(--sf-anim-speed) ease;
+      color: var(--sf-text);
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: var(--sf-primary-gradient);
+      color: #fff;
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--sf-primary) 36%, transparent);
+    }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .btn-secondary {
+      background: color-mix(in srgb, var(--sf-surface) 85%, white 15%);
+      border-color: var(--sf-border);
+      color: var(--sf-text);
+    }
+    .btn-secondary:hover { background: color-mix(in srgb, var(--sf-surface) 76%, white 24%); }
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--sf-border);
       color: var(--sf-muted);
     }
-    .subtitle { max-width: 68ch; color: var(--sf-muted); font-size: clamp(.98rem, 1.7vw, 1.12rem); }
 
-    .row { display: flex; flex-wrap: wrap; gap: 10px; }
-    .btn {
-      border-radius: var(--sf-btn-radius);
-      border: var(--sf-btn-border);
-      cursor: pointer;
-      font-family: var(--sf-font-body);
-      font-weight: 700;
-      font-size: .9rem;
-      padding: 11px 15px;
-      transition: transform .18s ease, box-shadow .2s ease, background .22s ease, color .22s ease, border-color .22s ease;
-      will-change: transform;
+    .device {
+      width: min(100%, 310px);
+      margin-left: auto;
+      background: color-mix(in srgb, var(--sf-surface) 88%, black 12%);
+      border: 1px solid var(--sf-border);
+      border-radius: 28px;
+      padding: 14px;
+      box-shadow: var(--sf-shadow);
     }
-    .btn:hover { transform: var(--sf-btn-hover-lift); }
-    .btn:active { transform: var(--sf-btn-active-lift); }
-    .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sf-ring); }
-    .btn.primary { background: var(--sf-btn-primary-bg); color: var(--sf-btn-primary-text); border-color: transparent; }
-    .btn.secondary { background: var(--sf-btn-secondary-bg); color: var(--sf-text); border-color: color-mix(in srgb, var(--sf-primary) 50%, var(--sf-border)); }
-    .btn.ghost { background: var(--sf-btn-ghost-bg); color: var(--sf-text); }
-    .btn.destructive { background: var(--sf-btn-destructive-bg); color: #fff; border-color: transparent; }
 
-    .feature-grid, .component-grid, .palette-grid {
+    .features {
       display: grid;
-      gap: var(--sf-gap-2);
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--sf-grid-gap);
+      margin-bottom: 18px;
     }
-
     .card {
-      border: var(--sf-card-border);
+      background: color-mix(in srgb, var(--sf-surface) 92%, white 8%);
+      border: 1px solid var(--sf-border);
       border-radius: var(--sf-card-radius);
-      background: var(--sf-card-bg);
-      box-shadow: var(--sf-card-shadow);
-      padding: var(--sf-gap-2);
-      transition: transform .2s ease, border-color .2s ease;
+      padding: var(--sf-card-padding);
+      box-shadow: var(--sf-shadow);
+      transition: transform var(--sf-anim-speed) ease, box-shadow var(--sf-anim-speed) ease, border-color var(--sf-anim-speed) ease;
     }
-    .card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--sf-primary) 62%, var(--sf-border)); }
-    .card p { color: var(--sf-muted); font-size: .95rem; margin-top: 8px; }
-
-    .icon-wrap {
-      width: 42px; height: 42px;
-      border-radius: 12px;
-      border: 1px solid color-mix(in srgb, var(--sf-primary) 46%, var(--sf-border));
-      background: var(--sf-icon-bg);
-      display: grid; place-items: center;
-      margin-bottom: 12px;
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--sf-primary) 35%, var(--sf-border));
+      box-shadow: 0 14px 28px color-mix(in srgb, var(--sf-primary) 17%, rgba(0,0,0,.2));
+    }
+    .icon {
+      width: 28px; height: 28px;
       color: var(--sf-primary);
+      margin-bottom: 12px;
     }
-    .icon-wrap svg { width: 24px; height: 24px; }
-
-    .type-grid { display: grid; gap: var(--sf-gap-2); grid-template-columns: 1.2fr .8fr; }
-    .type-specimen { display: grid; gap: 12px; }
-    .type-meta { color: var(--sf-muted); font-size: .9rem; }
-
-    .swatch {
-      border: var(--sf-card-border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: color-mix(in srgb, var(--sf-surface-2) 70%, transparent);
-    }
-    .chip { height: 54px; border-bottom: 1px solid var(--sf-border); }
-    .chip.gradient { background-image: var(--sf-gold-grad); }
-    .sw-meta { padding: 9px; display: grid; gap: 2px; font-size: .78rem; }
-    .sw-meta b { color: var(--sf-text); }
-    .sw-meta span { color: var(--sf-muted); }
-
-    .controls-surface {
-      display: grid;
-      gap: var(--sf-gap-2);
-    }
-
-    .input, .select {
-      border-radius: max(8px, calc(var(--sf-btn-radius) - 2px));
-      border: 1px solid var(--sf-border);
-      background: color-mix(in srgb, var(--sf-surface-2) 80%, transparent);
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-family: var(--sf-font-heading);
+      font-weight: min(calc(var(--sf-heading-weight) - 100), 700);
       color: var(--sf-text);
-      padding: 10px 12px;
-      font: 600 .92rem var(--sf-font-body);
-      width: 100%;
     }
-    .input::placeholder { color: color-mix(in srgb, var(--sf-muted) 86%, transparent); }
-    .input:focus, .select:focus { outline: none; box-shadow: 0 0 0 3px var(--sf-ring); border-color: var(--sf-primary); }
-
-    .badge {
-      display: inline-flex;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--sf-primary) 50%, var(--sf-border));
-      background: color-mix(in srgb, var(--sf-primary) 16%, transparent);
-      font-size: .76rem;
-      font-weight: 800;
-      letter-spacing: .05em;
-      text-transform: uppercase;
+    .card p {
+      margin: 0;
+      color: var(--sf-muted);
+      font-size: 14px;
+      line-height: 1.45;
     }
 
-    .switch {
-      --h: 28px; --w: 52px;
-      position: relative;
-      width: var(--w); height: var(--h);
-      border-radius: 999px;
-      border: 1px solid var(--sf-border);
-      background: color-mix(in srgb, var(--sf-surface-3) 80%, transparent);
-      cursor: pointer;
-      transition: background .22s ease, border-color .22s ease;
-      display: inline-grid;
+    .component-strip {
+      display: flex;
       align-items: center;
-      padding: 3px;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: color-mix(in srgb, var(--sf-surface) 88%, white 12%);
+      border: 1px solid var(--sf-border);
+      border-radius: calc(var(--sf-card-radius) - 4px);
+      padding: 12px;
+      margin-bottom: 20px;
     }
-    .switch::after {
-      content: '';
+    .mini-input {
+      border: 1px solid var(--sf-border);
+      background: color-mix(in srgb, var(--sf-bg) 58%, white 42%);
+      color: var(--sf-text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-width: 210px;
+      font: inherit;
+    }
+    .toggle {
+      width: 48px; height: 28px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--sf-secondary) 38%, #6d7485 62%);
+      position: relative;
+      border: 1px solid var(--sf-border);
+    }
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 3px; left: 22px;
       width: 20px; height: 20px;
       border-radius: 50%;
       background: #fff;
-      transform: translateX(0);
-      transition: transform .22s var(--sf-anim-ease);
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
     }
-    .switch[data-on="1"] { background: color-mix(in srgb, var(--sf-primary) 45%, transparent); border-color: color-mix(in srgb, var(--sf-primary) 58%, var(--sf-border)); }
-    .switch[data-on="1"]::after { transform: translateX(22px); }
 
-    .anim-cards {
-      margin-top: 10px;
+    .swatches { display: flex; gap: 8px; align-items: center; }
+    .swatch {
       display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      font-size: 11px;
+      color: var(--sf-muted);
+      text-align: center;
+      min-width: 74px;
+    }
+    .swatch i {
+      width: 100%;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: var(--color);
+      display: block;
     }
 
-    /* Floating panel */
-    .panel {
+    .pick-wrap { text-align: center; padding: 6px 0 2px; }
+    .like-btn {
+      border: 0;
+      background: var(--sf-primary-gradient);
+      color: #fff;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: .01em;
+      padding: 14px 26px;
+      border-radius: calc(var(--sf-btn-radius) + 6px);
+      cursor: pointer;
+      box-shadow: 0 16px 34px color-mix(in srgb, var(--sf-primary) 35%, transparent);
+    }
+
+    .mixer {
       position: fixed;
-      right: 18px;
-      top: 84px;
-      width: min(360px, calc(100vw - 26px));
-      z-index: 50;
-      border: 1px solid var(--sf-border);
+      right: 14px;
+      top: 88px;
+      width: min(320px, calc(100vw - 24px));
+      background: rgba(12,16,28,.72);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.15);
       border-radius: 16px;
-      background: var(--sf-panel-bg);
-      backdrop-filter: var(--sf-panel-blur);
-      box-shadow: 0 20px 54px rgba(0,0,0,.34);
-      overflow: hidden;
-      touch-action: none;
+      box-shadow: 0 14px 40px rgba(0,0,0,.34);
+      color: #eef2ff;
+      z-index: 65;
+      transform: translateY(8px) scale(.98);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
     }
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--sf-border);
-      cursor: grab;
-      user-select: none;
-      background: color-mix(in srgb, var(--sf-surface) 80%, transparent);
+    .mixer.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
     }
-    .panel-head:active { cursor: grabbing; }
-    .panel-title { display: grid; gap: 2px; }
-    .panel-title b { font-size: .88rem; }
-    .panel-title span { color: var(--sf-muted); font-size: .75rem; }
-    .live-dot {
-      width: 9px; height: 9px; border-radius: 50%;
-      background: var(--sf-primary);
-      box-shadow: 0 0 0 8px color-mix(in srgb, var(--sf-primary) 20%, transparent);
+    .mixer-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
     }
-    .panel-body { padding: 12px; display: grid; gap: 10px; }
-
-    .picker-row { display: grid; gap: 4px; }
-    .picker-row label { font-size: .71rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 800; color: var(--sf-muted); }
-
-    .panel-foot { padding: 10px 12px 14px; border-top: 1px solid var(--sf-border); display: grid; gap: 8px; }
-    .mini { font-size: .74rem; color: var(--sf-muted); }
-
-    .collapse-btn {
-      border: 1px solid var(--sf-border);
-      border-radius: 9px;
-      background: transparent;
-      color: var(--sf-text);
-      width: 30px; height: 30px;
+    .mixer h3 { margin: 0; font-size: 15px; }
+    .collapse {
+      border: 0; background: transparent; color: #fff; font-weight: 700; cursor: pointer;
+      padding: 4px 6px; border-radius: 8px;
+    }
+    .mixer-body { padding: 12px 14px 14px; display: grid; gap: 9px; }
+    .mixer.collapsed .mixer-body { display: none; }
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 12px; color: #c8d4ee; font-weight: 700; letter-spacing: .02em; }
+    .field select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      padding: 10px 11px;
+      font: 600 14px Inter, sans-serif;
+    }
+    .summary {
+      border-top: 1px solid rgba(255,255,255,.12);
+      margin-top: 3px;
+      padding-top: 9px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #dce7ff;
+    }
+    .copy {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      margin-top: 8px;
+      background: linear-gradient(120deg, #5d8dff, #8b5cff);
+      color: #fff;
+      padding: 10px;
+      font-weight: 800;
       cursor: pointer;
     }
-    .panel.collapsed .panel-body,
-    .panel.collapsed .panel-foot { display: none; }
-    .panel.collapsed { width: 240px; }
 
-    .sr-only { position: absolute !important; width: 1px; height: 1px; margin: -1px; clip: rect(0, 0, 0, 0); overflow: hidden; }
-
-    @media (max-width: 1080px) {
-      .panel { position: static; width: auto; margin: 0 auto 16px; }
-      .wrap { padding-top: 8px; }
-      .tabs { margin-top: 8px; }
-    }
-    @media (max-width: 900px) {
-      .feature-grid, .component-grid, .palette-grid, .anim-cards { grid-template-columns: 1fr 1fr; }
-      .type-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 620px) {
-      .wrap { padding: 0 14px 40px; }
-      .feature-grid, .component-grid, .palette-grid, .anim-cards { grid-template-columns: 1fr; }
-      .tabs { top: 6px; }
+    @media (max-width: 1040px) {
+      .mixer { position: sticky; top: 74px; right: auto; margin-top: 14px; width: 100%; }
+      .preview-stage { min-height: auto; }
+      .preview-panel { position: relative; }
+      .hero { grid-template-columns: 1fr; }
+      .device { margin: 0; }
+      .features { grid-template-columns: 1fr; }
+      .tabs { grid-template-columns: 1fr 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
+        animation: none !important;
+        transition-duration: 0ms !important;
         scroll-behavior: auto !important;
       }
+    }
+
+    @keyframes meshMove {
+      0% { background-position: 0% 35%, 80% 10%, 45% 90%; }
+      100% { background-position: 14% 22%, 100% 40%, 20% 82%; }
     }
   </style>
 </head>
 <body>
-  <div class="app-bg" aria-hidden="true"></div>
-
-  <aside class="panel" id="control-panel" aria-label="Theme control panel">
-    <div class="panel-head" id="panel-drag-handle">
-      <div class="panel-title">
-        <b>Style Mixer</b>
-        <span id="panel-direction">Neon Creator</span>
-      </div>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <span class="live-dot" aria-hidden="true"></span>
-        <button class="collapse-btn" id="panel-toggle" title="Collapse panel" aria-label="Collapse panel">▾</button>
-      </div>
+  <div class="page">
+    <div class="tabs-wrap">
+      <div class="tabs" id="tabs"></div>
     </div>
-    <div class="panel-body" id="panel-pickers"></div>
-    <div class="panel-foot">
-      <button class="btn primary" id="copy-json">Copy as JSON</button>
-      <button class="btn ghost" id="reset-overrides">Reset overrides</button>
-      <div class="mini" id="export-status">Base + overrides + computed tokens</div>
-    </div>
-  </aside>
 
-  <nav class="tabs" id="tabs" aria-label="Direction tabs"></nav>
+    <section class="preview-stage" id="previewStage"></section>
 
-  <main class="wrap" id="main-preview">
-    <section class="section-card hero" id="section-hero">
-      <canvas id="hero-canvas" aria-hidden="true"></canvas>
-      <div class="hero-inner">
-        <span class="kicker" id="hero-kicker">Streaming-grade visual energy for creator growth</span>
-        <h1 id="hero-title">ContentForge</h1>
-        <p class="subtitle" id="hero-subtitle">Create social-first video content with templates, collaborate with vetted video talent, and optimize results with a live analytics cockpit.</p>
-        <div class="row">
-          <button class="btn primary">Start Creating</button>
-          <button class="btn secondary">Explore Marketplace</button>
-          <button class="btn ghost">See Live Demo</button>
-        </div>
+    <aside class="mixer" id="mixer">
+      <div class="mixer-head">
+        <h3>Customize Mix</h3>
+        <button class="collapse" id="collapseBtn">Collapse</button>
       </div>
-    </section>
-
-    <section class="section-card" id="section-features">
-      <p class="section-label">Feature Cards</p>
-      <div class="feature-grid" id="feature-grid"></div>
-    </section>
-
-    <section class="section-card" id="section-typography">
-      <p class="section-label">Typography Specimen</p>
-      <div class="type-grid">
-        <div class="type-specimen">
-          <h1>Creators move at culture speed.</h1>
-          <h2>Ship campaign-ready videos in hours.</h2>
-          <h3>Monetize production talent with confidence.</h3>
-          <p>ContentForge helps influencers, social teams, and small brands produce better videos faster. Build with templates, hire trusted specialists, and prove impact with analytics that map directly to conversions.</p>
-        </div>
-        <div class="card type-meta">
-          <div><b>Heading Font:</b> <span id="font-heading-name">Space Grotesk</span></div>
-          <div><b>Body Font:</b> <span id="font-body-name">Inter</span></div>
-          <div><b>Heading Weight:</b> <span id="font-heading-weight">800</span></div>
-          <div style="margin-top:10px;">This panel updates live from typography token overrides. Mix any direction's typography with any color system.</div>
-        </div>
+      <div class="mixer-body">
+        <div class="field"><label for="colors">Colors</label><select id="colors"></select></div>
+        <div class="field"><label for="typography">Typography</label><select id="typography"></select></div>
+        <div class="field"><label for="vibe">Vibe</label><select id="vibe"></select></div>
+        <div class="field"><label for="layout">Layout</label><select id="layout"></select></div>
+        <div class="summary" id="summary"></div>
+        <button class="copy" id="copyTokens">📋 Copy Design Tokens</button>
       </div>
-    </section>
+    </aside>
+  </div>
 
-    <section class="section-card" id="section-colors">
-      <p class="section-label">Color System</p>
-      <div class="palette-grid" id="palette-grid"></div>
-    </section>
-
-    <section class="section-card" id="section-components">
-      <p class="section-label">Component Gallery</p>
-      <div class="component-grid">
-        <div class="card controls-surface">
-          <h3>Buttons</h3>
-          <div class="row">
-            <button class="btn primary">Primary</button>
-            <button class="btn secondary">Secondary</button>
-            <button class="btn ghost">Ghost</button>
-            <button class="btn destructive">Destructive</button>
-          </div>
-        </div>
-        <div class="card controls-surface">
-          <h3>Inputs & Toggle</h3>
-          <input class="input" placeholder="Campaign name" aria-label="Campaign name input" />
-          <div style="display:flex; align-items:center; gap:10px;">
-            <button class="switch" id="demo-switch" data-on="0" aria-pressed="false"><span class="sr-only">Toggle</span></button>
-            <span style="color:var(--sf-muted)">Auto-publish clips</span>
-          </div>
-        </div>
-        <div class="card controls-surface">
-          <h3>Badge</h3>
-          <div class="badge">Top Creator Pick</div>
-          <p>Hover and active states are token-driven and adapt by button style override.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card" id="section-animation">
-      <p class="section-label">Animation Showcase</p>
-      <p style="color:var(--sf-muted);">GSAP ScrollTrigger controls reveal cadence. Animation level override can be Subtle, Smooth, or Dramatic style profiles.</p>
-      <div class="anim-cards" id="anim-cards">
-        <article class="card"><h3>Template Burst</h3><p>Trending video templates tailored by platform ratio.</p></article>
-        <article class="card"><h3>Creator Match</h3><p>Skill matching with verified editing portfolios.</p></article>
-        <article class="card"><h3>Attribution Lens</h3><p>Understand clips that drive saves, shares, and sales.</p></article>
-        <article class="card"><h3>Brand Safety</h3><p>Approval workflows with locked style kits.</p></article>
-        <article class="card"><h3>Auto Captions</h3><p>Multi-language subtitles in one click.</p></article>
-        <article class="card"><h3>Performance AI</h3><p>Predictive edits based on top-performing posts.</p></article>
-      </div>
-    </section>
-  </main>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/three@0.170.0/build/three.min.js"></script>
   <script>
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     const directions = {
       neon: {
-        name: 'Neon Creator',
-        effect: 'particleNetwork',
-        content: {
-          kicker: 'Streaming-grade visual energy for creator growth',
-          subtitle: 'Create social-first video content with templates, collaborate with vetted video talent, and optimize results with a live analytics cockpit.'
-        },
-        colors: {
-          '--sf-bg': '#0b0f18', '--sf-surface': '#141a2a', '--sf-surface-2': '#1a2134', '--sf-surface-3': '#242c43', '--sf-text': '#edf2ff', '--sf-muted': '#a1add1',
-          '--sf-border': 'rgba(135, 159, 228, 0.28)', '--sf-primary': '#13b9ff', '--sf-secondary': '#ff36c8', '--sf-accent': '#7e5fff', '--sf-destructive': '#ff5a70', '--sf-ring': 'rgba(19,185,255,.38)',
-          '--sf-hero-overlay': 'radial-gradient(1200px 560px at 10% 0%, rgba(19,185,255,.22), transparent 55%), radial-gradient(920px 520px at 90% 4%, rgba(255,54,200,.22), transparent 58%)'
-        },
-        typography: {
-          '--sf-font-heading': "'Space Grotesk', Inter, sans-serif", '--sf-font-body': "'Inter', system-ui, sans-serif", '--sf-heading-weight': '800', '--sf-body-weight': '500', '--sf-font-h1': 'clamp(2.2rem, 5.8vw, 4.6rem)'
-        },
-        buttons: {
-          '--sf-btn-radius': '12px', '--sf-btn-primary-bg': 'linear-gradient(135deg, #13b9ff, #ff36c8)', '--sf-btn-secondary-bg': 'color-mix(in srgb, var(--sf-primary) 16%, transparent)', '--sf-btn-destructive-bg': 'linear-gradient(145deg, #ff5a70, #ff3f55)',
-          '--sf-btn-hover-lift': 'translateY(-2px) scale(1.01)', '--sf-btn-active-lift': 'translateY(0) scale(.99)'
-        },
-        cards: { '--sf-card-radius': '18px', '--sf-card-shadow': '0 18px 42px rgba(0,0,0,.33)', '--sf-card-bg': 'linear-gradient(180deg, color-mix(in srgb, var(--sf-surface-2) 86%, transparent), color-mix(in srgb, var(--sf-surface) 96%, transparent))' },
-        animation: { '--sf-anim-level': '1.2', '--sf-anim-duration': '.58s', '--sf-anim-ease': 'cubic-bezier(.17,.84,.27,1)' },
-        icons: { '--sf-icon-stroke': '1.9', '--sf-icon-corner': 'round', '--sf-icon-bg': 'color-mix(in srgb, var(--sf-primary) 14%, transparent)', '--sf-icon-mode': 'outlined' },
-        spacing: { '--sf-space-scale': '1' },
-        mode: { '--sf-is-light': '0', '--sf-panel-bg': 'rgba(12,17,30,.56)', '--sf-panel-blur': 'blur(18px) saturate(1.35)' }
+        name: 'Neon Creator', subtitle: 'High-energy creator funnels built for speed, trend cycles, and daily campaign launches.',
+        colors: { '--sf-primary':'#00B7FF','--sf-secondary':'#FF2EC4','--sf-accent':'#7C5CFF','--sf-bg':'#0b0f18','--sf-surface':'#131a28','--sf-text':'#eef3ff','--sf-muted':'#95a3cc','--sf-border':'rgba(126,152,229,0.30)','--sf-primary-gradient':'linear-gradient(120deg, #00B7FF 0%, #FF2EC4 100%)','--sf-bg-mesh':'radial-gradient(circle at 8% 15%, rgba(0,183,255,.35), transparent 38%), radial-gradient(circle at 84% 20%, rgba(255,46,196,.25), transparent 35%), radial-gradient(circle at 50% 88%, rgba(124,92,255,.28), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Space Grotesk', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
+        vibe: { '--sf-card-radius':'18px','--sf-btn-radius':'12px','--sf-shadow':'0 12px 36px rgba(0,0,0,0.35)','--sf-anim-speed':'220ms' },
+        layout: { '--sf-spacing':'1','--sf-grid-gap':'18px','--sf-card-padding':'24px' },
+        tabGlow:'rgba(0,183,255,.45)'
       },
       clean: {
-        name: 'Clean Studio',
-        effect: 'orbs',
-        content: { kicker: 'Calm, clear interface for productive teams', subtitle: 'A Notion-meets-Linear atmosphere with quiet surfaces and measured motion designed for content operations at scale.' },
-        colors: {
-          '--sf-bg': '#f5f8fc', '--sf-surface': '#ffffff', '--sf-surface-2': '#f0f4fa', '--sf-surface-3': '#e7edf7', '--sf-text': '#111827', '--sf-muted': '#5d6c82',
-          '--sf-border': 'rgba(15,31,66,.14)', '--sf-primary': '#4f8cff', '--sf-secondary': '#7aa9ff', '--sf-accent': '#2e6fe1', '--sf-destructive': '#d64558', '--sf-ring': 'rgba(79,140,255,.26)',
-          '--sf-hero-overlay': 'radial-gradient(1200px 560px at 8% 0%, rgba(79,140,255,.14), transparent 56%), radial-gradient(920px 520px at 90% 5%, rgba(122,169,255,.16), transparent 60%)'
-        },
-        typography: { '--sf-font-heading': "'Manrope', Inter, sans-serif", '--sf-font-body': "'Inter', system-ui, sans-serif", '--sf-heading-weight': '800', '--sf-body-weight': '500', '--sf-font-h1': 'clamp(2.15rem, 5.4vw, 4.2rem)' },
-        buttons: { '--sf-btn-radius': '10px', '--sf-btn-primary-bg': 'linear-gradient(135deg, #4f8cff, #2e6fe1)', '--sf-btn-secondary-bg': 'color-mix(in srgb, var(--sf-primary) 13%, #fff 87%)', '--sf-btn-destructive-bg': 'linear-gradient(145deg, #d64558, #c63a4b)', '--sf-btn-hover-lift': 'translateY(-1px)', '--sf-btn-active-lift': 'translateY(0) scale(.995)' },
-        cards: { '--sf-card-radius': '14px', '--sf-card-shadow': '0 10px 24px rgba(44,77,138,.12)', '--sf-card-bg': 'linear-gradient(180deg, #fff, #f8fbff)' },
-        animation: { '--sf-anim-level': '.7', '--sf-anim-duration': '.45s', '--sf-anim-ease': 'cubic-bezier(.23,.72,.31,1)' },
-        icons: { '--sf-icon-stroke': '1.7', '--sf-icon-corner': 'round', '--sf-icon-bg': 'color-mix(in srgb, var(--sf-primary) 9%, #fff 91%)', '--sf-icon-mode': 'outlined' },
-        spacing: { '--sf-space-scale': '1.08' },
-        mode: { '--sf-is-light': '1', '--sf-panel-bg': 'rgba(248,251,255,.68)', '--sf-panel-blur': 'blur(14px) saturate(1.15)' }
+        name: 'Clean Studio', subtitle: 'A crisp product-led system for teams that value clarity, trust, and effortless onboarding.',
+        colors: { '--sf-primary':'#4F8CFF','--sf-secondary':'#93B4FF','--sf-accent':'#2F6FE4','--sf-bg':'#f5f8fc','--sf-surface':'#ffffff','--sf-text':'#0f172a','--sf-muted':'#51607a','--sf-border':'rgba(17,56,121,0.14)','--sf-primary-gradient':'linear-gradient(120deg, #4F8CFF 0%, #2F6FE4 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 18%, rgba(79,140,255,.18), transparent 38%), radial-gradient(circle at 82% 16%, rgba(147,180,255,.28), transparent 35%), radial-gradient(circle at 56% 90%, rgba(47,111,228,.14), transparent 38%)' },
+        typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
+        vibe: { '--sf-card-radius':'14px','--sf-btn-radius':'10px','--sf-shadow':'0 8px 20px rgba(26,71,145,0.10)','--sf-anim-speed':'190ms' },
+        layout: { '--sf-spacing':'1','--sf-grid-gap':'16px','--sf-card-padding':'22px' },
+        tabGlow:'rgba(79,140,255,.38)'
       },
       sunset: {
-        name: 'Sunset Vibes',
-        effect: 'warmMesh',
-        content: { kicker: 'Warm, playful, creator-friendly confidence', subtitle: 'Rounded UI with coral-to-amber glow crafted for Gen Z creators, indie founders, and social brands moving fast.' },
-        colors: {
-          '--sf-bg': '#fff7f1', '--sf-surface': '#ffffff', '--sf-surface-2': '#fff0e2', '--sf-surface-3': '#ffe7d2', '--sf-text': '#2f1e18', '--sf-muted': '#7f5b4c',
-          '--sf-border': 'rgba(151,86,47,.2)', '--sf-primary': '#ff7865', '--sf-secondary': '#ffb95f', '--sf-accent': '#ff9f36', '--sf-destructive': '#de4e57', '--sf-ring': 'rgba(255,120,101,.32)',
-          '--sf-hero-overlay': 'radial-gradient(1200px 560px at 8% 0%, rgba(255,120,101,.23), transparent 58%), radial-gradient(920px 520px at 92% 5%, rgba(255,185,95,.24), transparent 58%)'
-        },
-        typography: { '--sf-font-heading': "'Sora', Inter, sans-serif", '--sf-font-body': "'Plus Jakarta Sans', Inter, sans-serif", '--sf-heading-weight': '700', '--sf-body-weight': '500', '--sf-font-h1': 'clamp(2.3rem, 5.9vw, 4.55rem)' },
-        buttons: { '--sf-btn-radius': '999px', '--sf-btn-primary-bg': 'linear-gradient(135deg, #ff7865, #ffb95f)', '--sf-btn-secondary-bg': 'color-mix(in srgb, var(--sf-primary) 12%, #fff 88%)', '--sf-btn-destructive-bg': 'linear-gradient(145deg, #de4e57, #bf3946)', '--sf-btn-hover-lift': 'translateY(-2px) scale(1.015)', '--sf-btn-active-lift': 'translateY(0) scale(.985)' },
-        cards: { '--sf-card-radius': '24px', '--sf-card-shadow': '0 14px 32px rgba(188,91,49,.17)', '--sf-card-bg': 'linear-gradient(180deg, #fff, #fff7ef)' },
-        animation: { '--sf-anim-level': '1.05', '--sf-anim-duration': '.62s', '--sf-anim-ease': 'cubic-bezier(.18,.82,.25,1.05)' },
-        icons: { '--sf-icon-stroke': '1.7', '--sf-icon-corner': 'round', '--sf-icon-bg': 'color-mix(in srgb, var(--sf-primary) 16%, #fff 84%)', '--sf-icon-mode': 'duotone' },
-        spacing: { '--sf-space-scale': '1.06' },
-        mode: { '--sf-is-light': '1', '--sf-panel-bg': 'rgba(255,247,239,.66)', '--sf-panel-blur': 'blur(14px) saturate(1.12)' }
+        name: 'Sunset Vibes', subtitle: 'Warm, creator-friendly conversion flows with personality, confidence, and softer visual rhythm.',
+        colors: { '--sf-primary':'#FF6F61','--sf-secondary':'#FFBE55','--sf-accent':'#FFA63A','--sf-bg':'#fff5ee','--sf-surface':'#ffffff','--sf-text':'#302018','--sf-muted':'#7a5d4d','--sf-border':'rgba(164,79,56,0.18)','--sf-primary-gradient':'linear-gradient(120deg, #FF6F61 0%, #FFBE55 100%)','--sf-bg-mesh':'radial-gradient(circle at 12% 20%, rgba(255,111,97,.22), transparent 38%), radial-gradient(circle at 85% 18%, rgba(255,190,85,.30), transparent 34%), radial-gradient(circle at 56% 88%, rgba(255,166,58,.20), transparent 38%)' },
+        typography: { '--sf-font-heading':"'Sora', sans-serif",'--sf-font-body':"'Plus Jakarta Sans', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'24px','--sf-btn-radius':'999px','--sf-shadow':'0 12px 28px rgba(168,91,47,0.14)','--sf-anim-speed':'210ms' },
+        layout: { '--sf-spacing':'1.03','--sf-grid-gap':'18px','--sf-card-padding':'24px' },
+        tabGlow:'rgba(255,111,97,.35)'
       },
       midnight: {
-        name: 'Midnight Pro',
-        effect: 'terrain',
-        content: { kicker: 'Luxury editorial tone for high-ticket production', subtitle: 'Deep navy surfaces and precision geometry with premium gold gradients for serious creators and boutique agencies.' },
-        colors: {
-          '--sf-bg': '#081021', '--sf-surface': '#101a31', '--sf-surface-2': '#15233f', '--sf-surface-3': '#1d2e4f', '--sf-text': '#edf2ff', '--sf-muted': '#a5b2d3',
-          '--sf-border': 'rgba(222,189,110,.25)', '--sf-primary': '#e5ca84', '--sf-secondary': '#b69242', '--sf-accent': '#f3deaa', '--sf-destructive': '#d95666', '--sf-ring': 'rgba(229,202,132,.3)',
-          '--sf-hero-overlay': 'radial-gradient(1200px 560px at 8% 0%, rgba(229,202,132,.14), transparent 58%), radial-gradient(920px 520px at 90% 5%, rgba(18,30,56,.62), transparent 58%)',
-          '--sf-gold-grad': 'linear-gradient(140deg, #f7e1a3 0%, #d7b157 35%, #a37b27 72%, #f3de9d 100%)'
-        },
-        typography: { '--sf-font-heading': "'Playfair Display', Georgia, serif", '--sf-font-body': "'Inter', system-ui, sans-serif", '--sf-heading-weight': '700', '--sf-body-weight': '500', '--sf-font-h1': 'clamp(2.3rem, 6.1vw, 4.8rem)' },
-        buttons: { '--sf-btn-radius': '4px', '--sf-btn-primary-bg': 'var(--sf-gold-grad)', '--sf-btn-primary-text': '#15120d', '--sf-btn-secondary-bg': 'color-mix(in srgb, var(--sf-primary) 20%, transparent)', '--sf-btn-destructive-bg': 'linear-gradient(145deg, #d95666, #b9414f)', '--sf-btn-hover-lift': 'translateY(-1px)', '--sf-btn-active-lift': 'translateY(0)' },
-        cards: { '--sf-card-radius': '4px', '--sf-card-shadow': '0 16px 32px rgba(0,0,0,.42)', '--sf-card-bg': 'linear-gradient(180deg, #15233f, #0f1830)' },
-        animation: { '--sf-anim-level': '.82', '--sf-anim-duration': '.52s', '--sf-anim-ease': 'cubic-bezier(.2,.72,.3,1)' },
-        icons: { '--sf-icon-stroke': '1.6', '--sf-icon-corner': 'miter', '--sf-icon-bg': 'color-mix(in srgb, #b69242 24%, transparent)', '--sf-icon-mode': 'outline-sharp' },
-        spacing: { '--sf-space-scale': '1' },
-        mode: { '--sf-is-light': '0', '--sf-panel-bg': 'rgba(8,16,33,.62)', '--sf-panel-blur': 'blur(18px) saturate(1.2)' }
+        name: 'Midnight Pro', subtitle: 'Premium storytelling for enterprise buyers who expect polish, restraint, and authority.',
+        colors: { '--sf-primary':'#D4AF37','--sf-secondary':'#17233f','--sf-accent':'#F0D98A','--sf-bg':'#0a1020','--sf-surface':'#101a30','--sf-text':'#f7f0dc','--sf-muted':'#bcae86','--sf-border':'rgba(240,217,138,0.33)','--sf-primary-gradient':'linear-gradient(120deg, #D4AF37 0%, #B8962E 52%, #8A6A1F 100%)','--sf-bg-mesh':'radial-gradient(circle at 11% 18%, rgba(212,175,55,.18), transparent 36%), radial-gradient(circle at 86% 20%, rgba(240,217,138,.12), transparent 32%), radial-gradient(circle at 56% 89%, rgba(23,35,63,.55), transparent 40%)' },
+        typography: { '--sf-font-heading':"'Playfair Display', serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'700' },
+        vibe: { '--sf-card-radius':'4px','--sf-btn-radius':'4px','--sf-shadow':'0 12px 34px rgba(2,5,12,.42)','--sf-anim-speed':'180ms' },
+        layout: { '--sf-spacing':'1','--sf-grid-gap':'16px','--sf-card-padding':'22px' },
+        tabGlow:'rgba(212,175,55,.43)'
       },
       fresh: {
-        name: 'Fresh Pop',
-        effect: 'wireMesh',
-        content: { kicker: 'Geometric punch for modern growth loops', subtitle: 'Clean white-and-black structure with electric lime accents engineered for launch campaigns, promo drops, and creator funnels.' },
-        colors: {
-          '--sf-bg': '#ffffff', '--sf-surface': '#ffffff', '--sf-surface-2': '#f7f7f7', '--sf-surface-3': '#ededed', '--sf-text': '#111111', '--sf-muted': '#3d3d3d',
-          '--sf-border': 'rgba(17,17,17,.2)', '--sf-primary': '#b7ff00', '--sf-secondary': '#111111', '--sf-accent': '#79a800', '--sf-destructive': '#da2f45', '--sf-ring': 'rgba(183,255,0,.5)',
-          '--sf-hero-overlay': 'radial-gradient(1200px 560px at 8% 0%, rgba(183,255,0,.22), transparent 58%), radial-gradient(920px 520px at 92% 4%, rgba(17,17,17,.08), transparent 60%)'
-        },
-        typography: { '--sf-font-heading': "'Manrope', Inter, sans-serif", '--sf-font-body': "'Inter', system-ui, sans-serif", '--sf-heading-weight': '800', '--sf-body-weight': '600', '--sf-font-h1': 'clamp(2.25rem, 5.8vw, 4.55rem)' },
-        buttons: { '--sf-btn-radius': '8px', '--sf-btn-primary-bg': 'linear-gradient(135deg, #b7ff00, #d9ff72)', '--sf-btn-primary-text': '#111', '--sf-btn-secondary-bg': '#111111', '--sf-btn-ghost-bg': 'transparent', '--sf-btn-destructive-bg': 'linear-gradient(145deg, #da2f45, #bb2538)', '--sf-btn-hover-lift': 'translateY(-2px) scale(1.015)', '--sf-btn-active-lift': 'translateY(0) scale(.99)' },
-        cards: { '--sf-card-radius': '8px', '--sf-card-shadow': '0 8px 20px rgba(0,0,0,.08)', '--sf-card-bg': 'linear-gradient(180deg, #fff, #fafafa)' },
-        animation: { '--sf-anim-level': '1.15', '--sf-anim-duration': '.5s', '--sf-anim-ease': 'cubic-bezier(.15,.88,.22,1)' },
-        icons: { '--sf-icon-stroke': '2', '--sf-icon-corner': 'miter', '--sf-icon-bg': 'color-mix(in srgb, var(--sf-primary) 18%, #fff 82%)', '--sf-icon-mode': 'filled' },
-        spacing: { '--sf-space-scale': '.97' },
-        mode: { '--sf-is-light': '1', '--sf-panel-bg': 'rgba(255,255,255,.72)', '--sf-panel-blur': 'blur(12px) saturate(1.05)' }
+        name: 'Fresh Pop', subtitle: 'Bold, modern contrast for fast-moving teams that want punchy UI with minimal clutter.',
+        colors: { '--sf-primary':'#111111','--sf-secondary':'#B7FF00','--sf-accent':'#5F8F00','--sf-bg':'#ffffff','--sf-surface':'#ffffff','--sf-text':'#111111','--sf-muted':'#4b4b4b','--sf-border':'rgba(17,17,17,0.36)','--sf-primary-gradient':'linear-gradient(120deg, #111111 0%, #111111 100%)','--sf-bg-mesh':'radial-gradient(circle at 11% 14%, rgba(17,17,17,.04), transparent 35%), radial-gradient(circle at 88% 18%, rgba(183,255,0,.20), transparent 28%), radial-gradient(circle at 55% 85%, rgba(95,143,0,.11), transparent 36%)' },
+        typography: { '--sf-font-heading':"'Manrope', sans-serif",'--sf-font-body':"'Inter', sans-serif",'--sf-heading-weight':'800' },
+        vibe: { '--sf-card-radius':'8px','--sf-btn-radius':'8px','--sf-shadow':'0 8px 24px rgba(10,10,10,0.08)','--sf-anim-speed':'170ms' },
+        layout: { '--sf-spacing':'1','--sf-grid-gap':'14px','--sf-card-padding':'20px' },
+        tabGlow:'rgba(183,255,0,.44)'
       }
     };
 
-    const groups = {
-      colors: 'Color Palette',
-      typography: 'Typography',
-      buttons: 'Button Style',
-      cards: 'Card Style',
-      animation: 'Animation Level',
-      icons: 'Icon Style',
-      spacing: 'Spacing',
-      mode: 'Dark/Light',
-      overall: 'Overall Direction'
-    };
+    const order = ['neon','clean','sunset','midnight','fresh'];
+    const state = { active: 'neon', base: null, colors: 'neon', typography: 'neon', vibe: 'neon', layout: 'neon', panelVisible: false, collapsed: false };
 
-    const sectionMap = {
-      colors: '#section-colors', typography: '#section-typography', buttons: '#section-components', cards: '#section-features', animation: '#section-animation', icons: '#section-features', spacing: '#section-components', mode: '#section-hero', overall: '#section-hero'
-    };
+    const tabsEl = document.getElementById('tabs');
+    const stageEl = document.getElementById('previewStage');
+    const mixer = document.getElementById('mixer');
+    const summary = document.getElementById('summary');
 
-    const state = {
-      baseDirection: 'neon',
-      overrides: { colors: null, typography: null, buttons: null, cards: null, animation: null, icons: null, spacing: null, mode: null }
-    };
-
-    const icons = {
-      camera: {
-        outlined: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="var(--sf-icon-stroke)" stroke-linecap="var(--sf-icon-corner)" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>`,
-        filled: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z" opacity=".72"/></svg>`,
-        duotone: `<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="13" height="12" rx="2" fill="currentColor" opacity=".18"/><rect x="3" y="6" width="13" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M16 10l5-3v10l-5-3z" fill="currentColor" opacity=".64"/></svg>`,
-        'outline-sharp': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter"><rect x="3" y="6" width="13" height="12"/><path d="M16 10l5-3v10l-5-3z"/></svg>`
-      },
-      people: {
-        outlined: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="var(--sf-icon-stroke)" stroke-linecap="var(--sf-icon-corner)" stroke-linejoin="round"><path d="M8 11a3 3 0 100-6 3 3 0 000 6z"/><path d="M16.5 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/><path d="M3 18.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5"/><path d="M13 18.5c.4-1.8 2-3 4-3 2.2 0 4 1.4 4 3"/></svg>`,
-        filled: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="10" r="2.5" opacity=".7"/><path d="M3 18.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5"/><path d="M13 18.5c.4-1.8 2-3 4-3 2.2 0 4 1.4 4 3" opacity=".78"/></svg>`,
-        duotone: `<svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3" fill="currentColor" opacity=".24"/><circle cx="16.5" cy="10" r="2.5" fill="currentColor" opacity=".42"/><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="16.5" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 18.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.5"/><path d="M13 18.5c.4-1.8 2-3 4-3 2.2 0 4 1.4 4 3" stroke="currentColor" stroke-width="1.5"/></svg>`,
-        'outline-sharp': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linejoin="miter"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M3 18.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5"/><path d="M13 18.5c.4-1.8 2-3 4-3 2.2 0 4 1.4 4 3"/></svg>`
-      },
-      chart: {
-        outlined: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="var(--sf-icon-stroke)" stroke-linecap="var(--sf-icon-corner)" stroke-linejoin="round"><path d="M4 20V8"/><path d="M10 20V4"/><path d="M16 20v-6"/><path d="M22 20H2"/></svg>`,
-        filled: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="8" width="2" height="12"/><rect x="9" y="4" width="2" height="16"/><rect x="15" y="14" width="2" height="6"/><rect x="2" y="20" width="20" height="2" opacity=".72"/></svg>`,
-        duotone: `<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="2" height="12" fill="currentColor" opacity=".45"/><rect x="9" y="4" width="2" height="16" fill="currentColor" opacity=".65"/><rect x="15" y="14" width="2" height="6" fill="currentColor" opacity=".35"/><path d="M22 20H2" stroke="currentColor" stroke-width="1.7"/></svg>`,
-        'outline-sharp': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M4 20V8"/><path d="M10 20V4"/><path d="M16 20v-6"/><path d="M22 20H2"/></svg>`
-      }
-    };
-
-    const featureItems = [
-      { key: 'camera', title: 'Video Templates', body: 'Build high-performing social videos with vertical-first layouts, auto-caption presets, and creator-ready motion packs.' },
-      { key: 'people', title: 'Talent Marketplace', body: 'Match with editors, motion designers, and UGC creators to deliver briefs on-brand and on-time.' },
-      { key: 'chart', title: 'Analytics Dashboard', body: 'Track watch-through, shares, saves, and conversion lift across campaigns and creator partnerships.' }
-    ];
-
-    const refs = {
-      tabs: document.getElementById('tabs'),
-      pickerRoot: document.getElementById('panel-pickers'),
-      directionLabel: document.getElementById('panel-direction'),
-      kicker: document.getElementById('hero-kicker'),
-      subtitle: document.getElementById('hero-subtitle'),
-      featureGrid: document.getElementById('feature-grid'),
-      paletteGrid: document.getElementById('palette-grid'),
-      fontHead: document.getElementById('font-heading-name'),
-      fontBody: document.getElementById('font-body-name'),
-      fontWeight: document.getElementById('font-heading-weight'),
-      exportStatus: document.getElementById('export-status'),
-      panel: document.getElementById('control-panel'),
-      panelToggle: document.getElementById('panel-toggle'),
-      dragHandle: document.getElementById('panel-drag-handle'),
-      copyBtn: document.getElementById('copy-json')
-    };
-
-    function directionOptions(selectedKey) {
-      return Object.entries(directions).map(([key, d]) => `<option value="${key}" ${key === selectedKey ? 'selected' : ''}>${d.name}</option>`).join('');
+    function icon(kind) {
+      if (kind === 'video') return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg>`;
+      if (kind === 'people') return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M17 14a4 4 0 014 4v3"/></svg>`;
+      return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg>`;
     }
 
-    function createPickers() {
-      const rows = [];
-      Object.entries(groups).forEach(([groupKey, label]) => {
-        if (groupKey === 'overall') {
-          rows.push(`<div class="picker-row"><label>${label}</label><select class="select mixer" data-group="overall" data-target="${sectionMap.overall}">${directionOptions(state.baseDirection)}</select></div>`);
-        } else {
-          const selected = state.overrides[groupKey] || state.baseDirection;
-          rows.push(`<div class="picker-row"><label>${label}</label><select class="select mixer" data-group="${groupKey}" data-target="${sectionMap[groupKey]}"><option value="">Use Base</option>${directionOptions(selected)}</select></div>`);
-        }
-      });
-      refs.pickerRoot.innerHTML = rows.join('');
+    function makePanel(key) {
+      const d = directions[key];
+      const panel = document.createElement('article');
+      panel.className = `preview-panel${key === state.active ? ' active' : ''}`;
+      panel.dataset.key = key;
+      panel.innerHTML = `
+        <div class="composition">
+          <div class="content">
+            <div class="hero">
+              <div>
+                <div class="eyebrow">${d.name} Direction</div>
+                <h1>ContentForge</h1>
+                <p class="subtitle">${d.subtitle}</p>
+                <div class="hero-actions">
+                  <button class="btn btn-primary">Launch Campaign</button>
+                  <button class="btn btn-secondary customize">Customize →</button>
+                </div>
+              </div>
+              <div class="device">
+                <svg viewBox="0 0 280 540" width="100%" role="img" aria-label="Device mockup preview" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="grad-${key}" x1="0" x2="1">
+                      <stop offset="0%" stop-color="var(--sf-primary)"/>
+                      <stop offset="100%" stop-color="var(--sf-secondary)"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="8" y="8" width="264" height="524" rx="40" fill="color-mix(in srgb, var(--sf-bg) 88%, black 12%)" stroke="var(--sf-border)"/>
+                  <rect x="22" y="42" width="236" height="458" rx="28" fill="var(--sf-surface)" />
+                  <rect x="102" y="20" width="76" height="7" rx="4" fill="var(--sf-border)"/>
+                  <rect x="36" y="62" width="208" height="86" rx="16" fill="url(#grad-${key})" opacity="0.92"/>
+                  <rect x="46" y="76" width="126" height="10" rx="5" fill="rgba(255,255,255,.9)"/>
+                  <rect x="46" y="93" width="95" height="8" rx="4" fill="rgba(255,255,255,.65)"/>
+                  <rect x="46" y="111" width="54" height="24" rx="12" fill="rgba(255,255,255,.9)"/>
+                  <rect x="36" y="164" width="92" height="72" rx="12" fill="color-mix(in srgb, var(--sf-secondary) 35%, var(--sf-surface))"/>
+                  <rect x="136" y="164" width="108" height="72" rx="12" fill="color-mix(in srgb, var(--sf-primary) 25%, var(--sf-surface))"/>
+                  <rect x="36" y="248" width="208" height="80" rx="14" fill="color-mix(in srgb, var(--sf-bg) 8%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <path d="M52 300l36-22 30 18 45-32 24 11" stroke="var(--sf-primary)" stroke-width="4" fill="none"/>
+                  <rect x="36" y="340" width="208" height="134" rx="16" fill="color-mix(in srgb, var(--sf-bg) 6%, var(--sf-surface))" stroke="var(--sf-border)"/>
+                  <circle cx="62" cy="366" r="10" fill="var(--sf-secondary)"/>
+                  <rect x="80" y="360" width="130" height="10" rx="5" fill="var(--sf-text)" opacity=".75"/>
+                  <rect x="80" y="377" width="92" height="8" rx="4" fill="var(--sf-muted)" opacity=".55"/>
+                </svg>
+              </div>
+            </div>
 
-      refs.pickerRoot.querySelectorAll('.mixer').forEach(select => {
-        const g = select.dataset.group;
-        if (g !== 'overall' && state.overrides[g]) select.value = state.overrides[g];
-        if (g !== 'overall' && !state.overrides[g]) select.value = '';
+            <div class="features">
+              <article class="card">${icon('video')}<h3>Video Templates</h3><p>Ship platform-ready scripts, cuts, and thumbnail sets in minutes.</p></article>
+              <article class="card">${icon('people')}<h3>Talent Marketplace</h3><p>Match vetted creators to briefs based on niche, region, and CPM goals.</p></article>
+              <article class="card">${icon('chart')}<h3>Analytics Dashboard</h3><p>Track watch-through, ROAS, and production velocity in one live view.</p></article>
+            </div>
 
-        select.addEventListener('change', (e) => {
-          const group = e.currentTarget.dataset.group;
-          const value = e.currentTarget.value || null;
-          if (group === 'overall') {
-            transitionDirection(value);
-            return;
-          }
-          state.overrides[group] = value;
-          applyTheme();
-        });
+            <div class="component-strip">
+              <button class="btn btn-primary">Primary</button>
+              <button class="btn btn-secondary">Secondary</button>
+              <button class="btn btn-ghost">Ghost</button>
+              <input class="mini-input" value="Brief: product launch Q2" aria-label="Sample input" />
+              <div class="toggle" aria-hidden="true"></div>
+              <div class="swatches">
+                <span class="swatch"><i style="--color:var(--sf-primary)"></i><b>Primary</b><span data-token="--sf-primary"></span></span>
+                <span class="swatch"><i style="--color:var(--sf-secondary)"></i><b>Secondary</b><span data-token="--sf-secondary"></span></span>
+                <span class="swatch"><i style="--color:var(--sf-accent)"></i><b>Accent</b><span data-token="--sf-accent"></span></span>
+              </div>
+            </div>
 
-        const scrollToTarget = (e) => {
-          const target = document.querySelector(e.currentTarget.dataset.target);
-          target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-        select.addEventListener('focus', scrollToTarget);
-        select.addEventListener('click', scrollToTarget);
-      });
+            <div class="pick-wrap">
+              <button class="like-btn" data-like="${key}">I Like This One</button>
+            </div>
+          </div>
+        </div>`;
+      return panel;
     }
 
-    function resolvedDirectionFor(group) {
-      return state.overrides[group] || state.baseDirection;
+    function setVars(el, vars) {
+      Object.entries(vars).forEach(([k,v]) => el.style.setProperty(k, v));
     }
 
-    function computeMergedTokens() {
-      const merged = {};
-      ['colors', 'typography', 'buttons', 'cards', 'animation', 'icons', 'spacing', 'mode'].forEach(group => {
-        const dirKey = resolvedDirectionFor(group);
-        Object.assign(merged, directions[dirKey][group]);
-      });
-      return merged;
-    }
-
-    function setCssVars(vars) {
-      Object.entries(vars).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
-    }
-
-    function renderTabs() {
-      refs.tabs.innerHTML = Object.entries(directions).map(([key, d]) => `<button class="tab ${key === state.baseDirection ? 'active' : ''}" data-tab="${key}">${d.name}</button>`).join('');
-      refs.tabs.querySelectorAll('[data-tab]').forEach(btn => {
-        btn.addEventListener('click', () => transitionDirection(btn.dataset.tab));
-      });
-    }
-
-    function currentIconMode() {
-      return getComputedStyle(document.documentElement).getPropertyValue('--sf-icon-mode').trim() || 'outlined';
-    }
-
-    function renderFeatures() {
-      const mode = currentIconMode();
-      refs.featureGrid.innerHTML = featureItems.map(item => {
-        const svg = icons[item.key][mode] || icons[item.key].outlined;
-        return `<article class="card"><div class="icon-wrap">${svg}</div><h3>${item.title}</h3><p>${item.body}</p></article>`;
-      }).join('');
-    }
-
-    function getColorTokenMap() {
-      const s = getComputedStyle(document.documentElement);
-      return [
-        { role: 'Primary', token: '--sf-primary', value: s.getPropertyValue('--sf-primary').trim(), usage: 'Main CTA / Highlights' },
-        { role: 'Secondary', token: '--sf-secondary', value: s.getPropertyValue('--sf-secondary').trim(), usage: 'Secondary actions' },
-        { role: 'Accent', token: '--sf-accent', value: s.getPropertyValue('--sf-accent').trim(), usage: 'Badges / focus detail' },
-        { role: 'Background', token: '--sf-bg', value: s.getPropertyValue('--sf-bg').trim(), usage: 'Page canvas' },
-        { role: 'Surface', token: '--sf-surface', value: s.getPropertyValue('--sf-surface').trim(), usage: 'Cards / panels' },
-        { role: 'Text', token: '--sf-text', value: s.getPropertyValue('--sf-text').trim(), usage: 'Body / headings' },
-        { role: 'Muted', token: '--sf-muted', value: s.getPropertyValue('--sf-muted').trim(), usage: 'Secondary copy' }
-      ];
-    }
-
-    function renderPalette() {
-      const colors = getColorTokenMap();
-      const isMidnightColors = resolvedDirectionFor('colors') === 'midnight';
-      refs.paletteGrid.innerHTML = colors.map((c, i) => {
-        const chipClass = isMidnightColors && i === 0 ? 'chip gradient' : 'chip';
-        const style = chipClass.includes('gradient') ? '' : `style="background:${c.value}"`;
-        return `<div class="swatch"><div class="${chipClass}" ${style}></div><div class="sw-meta"><b>${c.role}</b><span>${c.value}</span><span>${c.usage}</span></div></div>`;
-      }).join('');
-    }
-
-    function updateTypographyLabels() {
-      const s = getComputedStyle(document.documentElement);
-      refs.fontHead.textContent = s.getPropertyValue('--sf-font-heading').replaceAll("'", '').split(',')[0].trim();
-      refs.fontBody.textContent = s.getPropertyValue('--sf-font-body').replaceAll("'", '').split(',')[0].trim();
-      refs.fontWeight.textContent = s.getPropertyValue('--sf-heading-weight').trim();
-    }
-
-    function applyTheme() {
-      const merged = computeMergedTokens();
-      setCssVars(merged);
-      const base = directions[state.baseDirection];
-      refs.directionLabel.textContent = base.name;
-      refs.kicker.textContent = base.content.kicker;
-      refs.subtitle.textContent = base.content.subtitle;
-      renderTabs();
-      createPickers();
-      renderFeatures();
-      renderPalette();
-      updateTypographyLabels();
-      setupAnimations();
-      setupThreeEffect();
-    }
-
-    function transitionDirection(nextKey) {
-      if (!directions[nextKey]) return;
-      if (!window.gsap || prefersReduced) {
-        state.baseDirection = nextKey;
-        applyTheme();
-        return;
-      }
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-      tl.to('#main-preview', { opacity: .55, y: 10, duration: .2 })
-        .add(() => { state.baseDirection = nextKey; applyTheme(); })
-        .to('#main-preview', { opacity: 1, y: 0, duration: .2 });
-    }
-
-    function setupToggle() {
-      const sw = document.getElementById('demo-switch');
-      sw?.addEventListener('click', () => {
-        const on = sw.dataset.on === '1' ? '0' : '1';
-        sw.dataset.on = on;
-        sw.setAttribute('aria-pressed', on === '1');
-      });
-    }
-
-    function setupPanel() {
-      refs.panelToggle.addEventListener('click', () => {
-        refs.panel.classList.toggle('collapsed');
-        refs.panelToggle.textContent = refs.panel.classList.contains('collapsed') ? '▸' : '▾';
-      });
-
-      if (window.innerWidth <= 1080) return;
-
-      let dragging = false, ox = 0, oy = 0;
-      refs.dragHandle.addEventListener('pointerdown', (e) => {
-        dragging = true;
-        const rect = refs.panel.getBoundingClientRect();
-        ox = e.clientX - rect.left;
-        oy = e.clientY - rect.top;
-        refs.dragHandle.setPointerCapture(e.pointerId);
-      });
-      refs.dragHandle.addEventListener('pointermove', (e) => {
-        if (!dragging) return;
-        const x = Math.min(Math.max(8, e.clientX - ox), window.innerWidth - refs.panel.offsetWidth - 8);
-        const y = Math.min(Math.max(8, e.clientY - oy), window.innerHeight - refs.panel.offsetHeight - 8);
-        refs.panel.style.left = x + 'px';
-        refs.panel.style.top = y + 'px';
-        refs.panel.style.right = 'auto';
-      });
-      refs.dragHandle.addEventListener('pointerup', () => dragging = false);
-    }
-
-    function exportJson() {
-      const computed = getComputedStyle(document.documentElement);
-      const tokenKeys = [
-        '--sf-bg','--sf-surface','--sf-surface-2','--sf-surface-3','--sf-text','--sf-muted','--sf-border','--sf-primary','--sf-secondary','--sf-accent','--sf-destructive','--sf-ring',
-        '--sf-font-heading','--sf-font-body','--sf-font-h1','--sf-font-h2','--sf-font-h3','--sf-heading-weight','--sf-body-weight',
-        '--sf-btn-radius','--sf-btn-primary-bg','--sf-btn-secondary-bg','--sf-btn-destructive-bg','--sf-btn-hover-lift',
-        '--sf-card-radius','--sf-card-bg','--sf-card-shadow',
-        '--sf-space-scale','--sf-icon-mode','--sf-icon-stroke','--sf-anim-level','--sf-anim-duration','--sf-is-light'
-      ];
-      const fullDesignTokens = Object.fromEntries(tokenKeys.map(k => [k.replace('--sf-',''), computed.getPropertyValue(k).trim()]));
-      return {
-        project: {
-          name: 'ContentForge',
-          context: 'Social media video content platform with templates, talent marketplace, and analytics dashboard',
-          target: 'Creators, influencers, and small businesses'
-        },
-        baseDirection: directions[state.baseDirection].name,
-        overrides: Object.fromEntries(Object.entries(state.overrides).filter(([,v]) => v).map(([k,v]) => [k, directions[v].name])),
-        fullDesignTokens,
-        contentSuggestions: {
-          heroHeadline: 'ContentForge',
-          heroSubtitle: refs.subtitle.textContent,
-          features: featureItems.map(f => ({ title: f.title, description: f.body }))
-        },
-        exportedAt: new Date().toISOString()
+    function applyToPanel(panelKey) {
+      const panel = stageEl.querySelector(`.preview-panel[data-key="${panelKey}"] .composition`);
+      if (!panel) return;
+      const mix = {
+        colors: directions[state.colors].colors,
+        typography: directions[state.typography].typography,
+        vibe: directions[state.vibe].vibe,
+        layout: directions[state.layout].layout
       };
-    }
+      setVars(panel, mix.colors); setVars(panel, mix.typography); setVars(panel, mix.vibe); setVars(panel, mix.layout);
+      const glow = directions[state.colors].tabGlow;
+      document.documentElement.style.setProperty('--tab-glow', glow);
+      const rootGradient = directions[state.colors].colors['--sf-primary-gradient'];
+      document.documentElement.style.setProperty('--sf-primary-gradient', rootGradient);
 
-    refs.copyBtn.addEventListener('click', async () => {
-      const payload = exportJson();
-      try {
-        await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-        refs.exportStatus.textContent = 'Copied JSON to clipboard ✓';
-      } catch (e) {
-        refs.exportStatus.textContent = 'Clipboard unavailable — JSON logged to console.';
-        console.log(JSON.stringify(payload, null, 2));
-      }
-    });
-
-    document.getElementById('reset-overrides').addEventListener('click', () => {
-      Object.keys(state.overrides).forEach(k => state.overrides[k] = null);
-      applyTheme();
-    });
-
-    // GSAP animation setup
-    function setupAnimations() {
-      if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
-      gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.getAll().forEach(t => t.kill());
-
-      const level = Number(getComputedStyle(document.documentElement).getPropertyValue('--sf-anim-level')) || 1;
-      const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sf-anim-duration')) || .55;
-
-      gsap.from('.hero-inner > *', {
-        y: 28 / Math.max(.6, level),
-        opacity: 0,
-        duration,
-        ease: 'power2.out',
-        stagger: 0.08
-      });
-
-      gsap.utils.toArray('.section-card').forEach((el, i) => {
-        if (i === 0) return;
-        gsap.from(el, {
-          y: 26,
-          opacity: 0,
-          duration: duration * 0.95,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 82%' }
-        });
-      });
-
-      gsap.from('#feature-grid .card', {
-        y: 26,
-        opacity: 0,
-        stagger: 0.12 / Math.max(.6, level),
-        duration,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '#section-features', start: 'top 78%' }
-      });
-
-      gsap.from('#anim-cards .card', {
-        y: 18,
-        opacity: 0,
-        scale: 0.98,
-        stagger: 0.08,
-        duration: duration * 0.9,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '#section-animation', start: 'top 78%' }
+      panel.querySelectorAll('[data-token]').forEach(el => {
+        const token = el.getAttribute('data-token');
+        el.textContent = directions[state.colors].colors[token] || '';
       });
     }
 
-    // Three.js effect manager
-    const fx = {
-      renderer: null,
-      scene: null,
-      camera: null,
-      frame: null,
-      objects: [],
-      effect: null,
-      running: false,
-      visible: true,
-      init() {
-        const canvas = document.getElementById('hero-canvas');
-        this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(48, 1, 0.1, 120);
-        this.camera.position.set(0, 0, 18);
+    function refreshTabs() {
+      tabsEl.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.key === state.active));
+    }
 
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
+    function renderSummary() {
+      summary.textContent = `Base: ${state.base ? directions[state.base].name : 'Not selected'} | Colors: ${directions[state.colors].name} | Typography: ${directions[state.typography].name} | Vibe: ${directions[state.vibe].name} | Layout: ${directions[state.layout].name}`;
+    }
 
-        const io = new IntersectionObserver(([e]) => { this.visible = e.isIntersecting; this.setRunning(); }, { threshold: 0.1 });
-        io.observe(document.getElementById('section-hero'));
+    function showMixer() {
+      state.panelVisible = true;
+      mixer.classList.add('visible');
+    }
 
-        document.addEventListener('visibilitychange', () => this.setRunning());
-      },
-      clear() {
-        this.objects.forEach(obj => {
-          this.scene.remove(obj);
-          if (obj.geometry) obj.geometry.dispose();
-          if (obj.material) {
-            if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
-            else obj.material.dispose();
-          }
-        });
-        this.objects = [];
-      },
-      resize() {
-        const el = document.getElementById('section-hero');
-        const w = Math.max(260, el.clientWidth);
-        const h = Math.max(260, el.clientHeight);
-        this.renderer.setSize(w, h, false);
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
-      },
-      setRunning() {
-        const canRun = !prefersReduced && !document.hidden && this.visible;
-        if (canRun && !this.running) {
-          this.running = true;
-          this.loop();
-        } else if (!canRun) {
-          this.running = false;
-          if (this.frame) cancelAnimationFrame(this.frame);
-        }
-      },
-      color(name) { return new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue(name).trim()); },
-      setEffect(type) {
-        if (!this.renderer) this.init();
-        this.clear();
-        this.effect = type;
+    function syncSelects() {
+      ['colors','typography','vibe','layout'].forEach(id => document.getElementById(id).value = state[id]);
+      renderSummary();
+    }
 
-        const primary = this.color('--sf-primary');
-        const secondary = this.color('--sf-secondary');
-        const accent = this.color('--sf-accent');
-
-        if (type === 'particleNetwork') {
-          const count = 90;
-          const pts = new Float32Array(count * 3);
-          for (let i = 0; i < count; i++) {
-            pts[i * 3] = (Math.random() - .5) * 20;
-            pts[i * 3 + 1] = (Math.random() - .5) * 12;
-            pts[i * 3 + 2] = (Math.random() - .5) * 12;
-          }
-          const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pts, 3));
-          const m = new THREE.PointsMaterial({ color: primary, size: .06, transparent: true, opacity: .92 });
-          const points = new THREE.Points(g, m);
-          this.scene.add(points); this.objects.push(points);
-
-          const lineGeo = new THREE.BufferGeometry();
-          lineGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(count * count * 3), 3));
-          const lineMat = new THREE.LineBasicMaterial({ color: secondary, transparent: true, opacity: .18 });
-          const lines = new THREE.LineSegments(lineGeo, lineMat);
-          lines.userData.count = count;
-          this.scene.add(lines); this.objects.push(lines);
-        }
-
-        if (type === 'orbs') {
-          for (let i = 0; i < 4; i++) {
-            const geo = new THREE.SphereGeometry(1.5 + Math.random() * 1.8, 30, 30);
-            const color = i % 2 ? secondary.clone().lerp(primary, .4) : accent.clone().lerp(primary, .5);
-            const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .14 });
-            const orb = new THREE.Mesh(geo, mat);
-            orb.position.set((Math.random() - .5) * 16, (Math.random() - .5) * 9, -4 + i);
-            orb.userData.seed = Math.random() * 5;
-            this.scene.add(orb); this.objects.push(orb);
-          }
-        }
-
-        if (type === 'warmMesh') {
-          const geo = new THREE.IcosahedronGeometry(4.5, 2);
-          const mat = new THREE.MeshBasicMaterial({ color: secondary.clone().lerp(accent, .45), wireframe: true, transparent: true, opacity: .32 });
-          const mesh = new THREE.Mesh(geo, mat);
-          mesh.rotation.x = .6;
-          this.scene.add(mesh); this.objects.push(mesh);
-        }
-
-        if (type === 'terrain') {
-          const geo = new THREE.PlaneGeometry(18, 12, 70, 40);
-          const arr = geo.attributes.position.array;
-          for (let i = 0; i < arr.length; i += 3) arr[i + 2] = Math.sin(arr[i] * .45) * .35 + Math.cos(arr[i + 1] * .52) * .3;
-          geo.computeVertexNormals();
-          const mat = new THREE.MeshBasicMaterial({ color: accent.clone().lerp(primary, .5), wireframe: true, transparent: true, opacity: .32 });
-          const terrain = new THREE.Mesh(geo, mat);
-          terrain.rotation.x = -0.86;
-          terrain.position.y = -1.4;
-          this.scene.add(terrain); this.objects.push(terrain);
-        }
-
-        if (type === 'wireMesh') {
-          const geo = new THREE.TorusKnotGeometry(3.2, .72, 180, 22);
-          const mat = new THREE.MeshBasicMaterial({ color: primary, wireframe: true, transparent: true, opacity: .24 });
-          const knot = new THREE.Mesh(geo, mat);
-          this.scene.add(knot); this.objects.push(knot);
-        }
-
-        this.setRunning();
-      },
-      loop(time = 0) {
-        if (!this.running) return;
-        const t = time * 0.001;
-
-        if (this.effect === 'particleNetwork') {
-          const points = this.objects[0];
-          const lines = this.objects[1];
-          if (points?.geometry) {
-            const pos = points.geometry.attributes.position.array;
-            const count = points.geometry.attributes.position.count;
-            for (let i = 0; i < count; i++) {
-              pos[i * 3 + 1] += Math.sin(t * .8 + i) * 0.002;
-              pos[i * 3] += Math.cos(t * .6 + i * 1.2) * 0.0018;
-            }
-            points.geometry.attributes.position.needsUpdate = true;
-
-            if (lines?.geometry) {
-              const linePos = [];
-              for (let i = 0; i < count; i++) {
-                for (let j = i + 1; j < count; j++) {
-                  const ix = i * 3, jx = j * 3;
-                  const dx = pos[ix] - pos[jx], dy = pos[ix + 1] - pos[jx + 1], dz = pos[ix + 2] - pos[jx + 2];
-                  if ((dx * dx + dy * dy + dz * dz) < 10) {
-                    linePos.push(pos[ix], pos[ix + 1], pos[ix + 2], pos[jx], pos[jx + 1], pos[jx + 2]);
-                  }
-                }
-              }
-              lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
-            }
-          }
-        }
-
-        if (this.effect === 'orbs') {
-          this.objects.forEach((o, i) => {
-            o.position.y += Math.sin(t * 0.8 + o.userData.seed) * 0.004;
-            o.position.x += Math.cos(t * 0.62 + i) * 0.003;
-          });
-        }
-
-        if (this.effect === 'warmMesh' || this.effect === 'wireMesh') {
-          this.objects.forEach(o => { o.rotation.y += 0.003; o.rotation.x += 0.0015; });
-        }
-
-        if (this.effect === 'terrain') {
-          const terrain = this.objects[0];
-          if (terrain?.geometry) {
-            const pos = terrain.geometry.attributes.position.array;
-            for (let i = 0; i < pos.length; i += 3) {
-              const x = pos[i], y = pos[i + 1];
-              pos[i + 2] = Math.sin(x * 0.55 + t * 0.95) * 0.42 + Math.cos(y * 0.5 + t * 0.8) * 0.28;
-            }
-            terrain.geometry.attributes.position.needsUpdate = true;
-          }
-        }
-
-        this.renderer.render(this.scene, this.camera);
-        this.frame = requestAnimationFrame((t2) => this.loop(t2));
+    function setActive(key) {
+      state.active = key;
+      stageEl.querySelectorAll('.preview-panel').forEach(p => p.classList.toggle('active', p.dataset.key === key));
+      refreshTabs();
+      if (!state.base) {
+        state.colors = state.typography = state.vibe = state.layout = key;
+        syncSelects();
       }
-    };
+      applyToPanel(key);
+    }
 
-    function setupThreeEffect() {
-      const effectSource = directions[state.baseDirection];
-      fx.setEffect(effectSource.effect);
+    function copyTokens() {
+      const payload = {
+        base: state.base ? directions[state.base].name : null,
+        selections: {
+          colors: directions[state.colors].name,
+          typography: directions[state.typography].name,
+          vibe: directions[state.vibe].name,
+          layout: directions[state.layout].name
+        },
+        tokens: {
+          ...directions[state.colors].colors,
+          ...directions[state.typography].typography,
+          ...directions[state.vibe].vibe,
+          ...directions[state.layout].layout
+        }
+      };
+      navigator.clipboard.writeText(JSON.stringify(payload, null, 2)).then(() => {
+        const btn = document.getElementById('copyTokens');
+        const old = btn.textContent;
+        btn.textContent = '✅ Copied';
+        setTimeout(() => btn.textContent = old, 1200);
+      });
     }
 
     function boot() {
-      setupPanel();
-      setupToggle();
-      applyTheme();
+      tabsEl.innerHTML = order.map(key => `<button class="tab${key === state.active ? ' active' : ''}" data-key="${key}">${directions[key].name}</button>`).join('');
+      stageEl.innerHTML = '';
+      order.forEach(key => stageEl.appendChild(makePanel(key)));
+
+      ['colors','typography','vibe','layout'].forEach(id => {
+        const sel = document.getElementById(id);
+        sel.innerHTML = order.map(key => `<option value="${key}">${directions[key].name}</option>`).join('');
+        sel.addEventListener('change', e => {
+          state[id] = e.target.value;
+          applyToPanel(state.active);
+          renderSummary();
+        });
+      });
+
+      tabsEl.addEventListener('click', e => {
+        const btn = e.target.closest('.tab');
+        if (!btn) return;
+        setActive(btn.dataset.key);
+      });
+
+      stageEl.addEventListener('click', e => {
+        if (e.target.closest('.customize')) showMixer();
+        const like = e.target.closest('[data-like]');
+        if (!like) return;
+        const k = like.dataset.like;
+        state.base = k;
+        state.colors = state.typography = state.vibe = state.layout = k;
+        setActive(k);
+        showMixer();
+        syncSelects();
+      });
+
+      document.getElementById('copyTokens').addEventListener('click', copyTokens);
+      document.getElementById('collapseBtn').addEventListener('click', () => {
+        state.collapsed = !state.collapsed;
+        mixer.classList.toggle('collapsed', state.collapsed);
+        document.getElementById('collapseBtn').textContent = state.collapsed ? 'Expand' : 'Collapse';
+      });
+
+      setActive('neon');
+      applyToPanel('neon');
+      syncSelects();
     }
 
     boot();

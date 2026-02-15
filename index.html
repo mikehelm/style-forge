@@ -6,626 +6,578 @@
   <title>StyleForge ✨ — Design Your Experience</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Sora:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090b12;
-      --surface: rgba(255, 255, 255, 0.06);
-      --surface-strong: rgba(255, 255, 255, 0.1);
-      --line: rgba(255, 255, 255, 0.16);
-      --text: #f5f8ff;
-      --muted: #b8c1dc;
-      --accent: #73a4ff;
-      --accent-2: #7f6dff;
-      --ok: #39d88f;
-      --danger: #ff6f8f;
-      --mood: .45;
-      --density: .45;
-      --temp: .35;
-      --radius: calc(14px + var(--mood) * 10px);
-      --space-scale: calc(1.15 - var(--density) * .35);
-      --sat: calc(0.9 + var(--mood) * 0.35);
+      --bg: #0a0a1a;
+      --bg-soft: #12132a;
+      --text: #f4f7ff;
+      --muted: #b3bbd6;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.18);
+      --accent1: #7c5cff;
+      --accent2: #2dd4ff;
+      --accent3: #ff6ad5;
+      --success: #3af2a0;
+      --shadow: 0 22px 70px rgba(10, 9, 28, 0.55);
     }
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: radial-gradient(circle at 18% 8%, #1b2140 0%, transparent 42%), radial-gradient(circle at 80% 18%, #27204a 0%, transparent 44%), var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; scroll-behavior: smooth; }
-    body { overflow-x: hidden; }
 
-    .page-bg {
-      position: fixed; inset: 0; z-index: -2;
-      background: linear-gradient(120deg, rgba(91,95,255,.14), rgba(255,114,196,.1), rgba(64,205,255,.08));
-      filter: saturate(var(--sat));
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
-    main { width: min(1100px, 92vw); margin: 0 auto; padding: 6vh 0 20vh; }
-    .demo-section {
-      min-height: 95vh;
-      margin: calc(26px * var(--space-scale)) 0;
-      padding: calc(28px * var(--space-scale));
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -25vmax;
+      pointer-events: none;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(124, 92, 255, 0.35), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(45, 212, 255, 0.26), transparent 45%),
+        radial-gradient(circle at 45% 78%, rgba(255, 106, 213, 0.18), transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(124, 92, 255, 0.18), transparent 35%);
+      animation: meshDrift 16s ease-in-out infinite alternate;
+      filter: blur(28px) saturate(120%);
+    }
+
+    body::after {
+      z-index: -1;
+      inset: 0;
+      opacity: 0.45;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+      animation-duration: 24s;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes meshDrift {
+      0% { transform: translate3d(-2%, -2%, 0) rotate(0deg) scale(1); }
+      100% { transform: translate3d(2%, 1%, 0) rotate(8deg) scale(1.08); }
+    }
+
+    .wrap {
+      width: min(1140px, 92vw);
+      margin: 0 auto;
+      padding: 32px 0 36px;
+    }
+
+    .hero {
+      min-height: min(96vh, 900px);
+      display: flex;
+      align-items: center;
+      padding: 22px 0 18px;
+    }
+
+    .hero-panel {
+      width: 100%;
+      background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 26px;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: clamp(22px, 3.5vw, 40px);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      letter-spacing: 0.2px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.08;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: #d9dff5;
+      font-size: clamp(1rem, 1.5vw, 1.18rem);
+      max-width: 62ch;
+      line-height: 1.55;
+    }
+
+    .prompt-box {
+      margin-top: 22px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(9, 10, 28, 0.58);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 170px;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      border-radius: 12px;
+      padding: 12px 12px 10px;
+      background: transparent;
+      color: #f2f6ff;
+      font: 500 1rem/1.55 Inter, sans-serif;
+      caret-color: #a5f2ff;
+    }
+
+    textarea::placeholder { color: #b4bddf; }
+
+    .controls {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .slider-row label {
+      color: #dce4ff;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .slider-wrap {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: #bfc8e8;
+    }
+
+    input[type="range"] {
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6ea7ff 0%, #7c5cff 40%, #ff6ad5 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2), 0 0 18px rgba(124, 92, 255, 0.35);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: radial-gradient(circle at 35% 30%, #ffffff, #b8d2ff 40%, #7c5cff);
+      box-shadow: 0 0 0 6px rgba(124, 92, 255, 0.22), 0 0 20px rgba(45, 212, 255, 0.45);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: radial-gradient(circle at 35% 30%, #ffffff, #b8d2ff 40%, #7c5cff);
+      box-shadow: 0 0 0 6px rgba(124, 92, 255, 0.22), 0 0 20px rgba(45, 212, 255, 0.45);
+      cursor: pointer;
+    }
+
+    .cta-row {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .cta {
+      border: 0;
+      color: white;
+      font: 700 1rem Inter, sans-serif;
+      letter-spacing: 0.3px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      cursor: pointer;
+      background: linear-gradient(95deg, var(--accent1), var(--accent2), var(--accent3));
+      background-size: 200% 100%;
+      box-shadow: 0 10px 30px rgba(124, 92, 255, 0.45);
+      animation: pulse 2.8s ease-in-out infinite, slideHue 4.2s linear infinite;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 14px 40px rgba(124, 92, 255, 0.6), 0 0 18px rgba(45, 212, 255, 0.45);
+    }
+
+    .cta:active { transform: translateY(1px); }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 10px 26px rgba(124, 92, 255, 0.42); }
+      50% { box-shadow: 0 12px 40px rgba(45, 212, 255, 0.42), 0 0 0 6px rgba(124, 92, 255, 0.11); }
+    }
+
+    @keyframes slideHue {
+      from { background-position: 0% 50%; }
+      to { background-position: 100% 50%; }
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .features {
+      min-height: min(100vh, 920px);
+      padding: 22px 0 14px;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+    }
+
+    .features h2 {
+      margin: 0;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+    }
+
+    .features p {
+      margin: 4px 0 10px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      min-height: 178px;
+      padding: 14px 14px 12px;
+      backdrop-filter: blur(8px);
+      transition: transform .25s ease, border-color .25s ease, opacity .2s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(165, 188, 255, 0.55);
+    }
+
+    .card.off { opacity: .5; filter: grayscale(.2); }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .name {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-weight: 700;
+      letter-spacing: .1px;
+    }
+
+    .icon {
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.14);
+      font-size: 14px;
+    }
+
+    .desc {
+      margin: 0;
+      color: #cad3ef;
+      font-size: .86rem;
+      line-height: 1.35;
+      min-height: 34px;
+    }
+
+    .switch {
+      --w: 42px;
+      --h: 24px;
+      position: relative;
+      display: inline-block;
+      width: var(--w);
+      height: var(--h);
+      flex: 0 0 auto;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .track {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: .25s;
+    }
+
+    .track::before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      top: 2px;
+      border-radius: 50%;
+      background: #fff;
+      transition: .25s;
+      box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .switch input:checked + .track {
+      background: linear-gradient(90deg, #7c5cff, #2dd4ff);
+      border-color: rgba(184, 230, 255, 0.6);
+      box-shadow: 0 0 14px rgba(124, 92, 255, 0.45);
+    }
+
+    .switch input:checked + .track::before { transform: translateX(18px); }
+
+    .demo {
+      margin-top: 10px;
+      height: 64px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(8, 10, 26, 0.55);
       position: relative;
       overflow: hidden;
-      transition: opacity .35s ease, filter .35s ease, transform .35s ease;
     }
-    .demo-section.is-disabled { opacity: .32; filter: grayscale(.9); transform: scale(.992); }
-    .demo-section h2 { margin: 0 0 8px; font-size: clamp(1.4rem, 2.8vw, 2.3rem); font-family: "Space Grotesk", Inter, sans-serif; letter-spacing: -.02em; }
-    .demo-section p.lead { margin: 0 0 22px; color: var(--muted); max-width: 70ch; }
 
-    .floating-panel {
-      position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
-      width: min(360px, calc(100vw - 20px)); z-index: 50;
-      background: rgba(10, 13, 24, .72);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 22px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.45);
-      backdrop-filter: blur(18px) saturate(150%);
-      -webkit-backdrop-filter: blur(18px) saturate(150%);
-      user-select: none;
-      transition: width .25s ease, height .25s ease, opacity .25s ease;
+    .demo::before,
+    .demo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transition: .35s ease;
     }
-    .floating-panel.collapsed { width: 86px; height: 76px; overflow: hidden; }
-    .panel-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 14px; cursor: grab; border-bottom: 1px solid rgba(255,255,255,.1);
+
+    .demo-3d::before { background: conic-gradient(from 20deg, #2dd4ff, #7c5cff, #ff6ad5, #2dd4ff); width: 36px; height: 36px; margin: auto; border-radius: 10px; animation: spin3d 4s linear infinite; }
+    .demo-scroll::before { background: linear-gradient(180deg, transparent 0, rgba(125, 141, 255, .7) 40%, transparent 100%); transform: translateY(-100%); animation: drop 2s ease infinite; }
+    .demo-particle::before { background: radial-gradient(circle, #9fdcff 1px, transparent 1px); background-size: 14px 14px; opacity: .4; animation: twinkle 1.8s steps(2) infinite; }
+    .demo-glass::before { background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.03)); transform: translateX(-30%); }
+    .demo-dark::before { background: linear-gradient(90deg, #111 50%, #f2f5ff 50%); opacity: .8; }
+    .demo-device::before { width: 28px; height: 52px; left: 14px; top: 6px; border: 2px solid #c8d5ff; border-radius: 8px; }
+    .demo-micro::before { left: 12px; right: 12px; top: 28px; height: 6px; border-radius: 99px; background: linear-gradient(90deg, #2dd4ff, #7c5cff); animation: nudge 1.8s ease infinite; }
+    .demo-icons::before { content: "✦  ⬢  ◈  ○"; inset: auto 0 18px; text-align: center; color: #a8c3ff; letter-spacing: 3px; font-size: 14px; }
+    .demo-hero::before { background: linear-gradient(120deg, #7c5cff, #2dd4ff); clip-path: polygon(0 100%, 30% 35%, 55% 58%, 72% 24%, 100% 100%); opacity: .8; }
+
+    .card:hover .demo-glass::before,
+    .card:not(.off) .demo-glass::before { transform: translateX(28%); }
+
+    .card.off .demo::before,
+    .card.off .demo::after { animation-play-state: paused !important; opacity: .35; }
+
+    @keyframes spin3d { to { transform: rotate(360deg); } }
+    @keyframes drop { 0% { transform: translateY(-100%);} 70%,100% { transform: translateY(100%);} }
+    @keyframes twinkle { 50% { opacity: .9; } }
+    @keyframes nudge { 50% { transform: translateX(30px);} }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(15,20,36,.93);
+      border: 1px solid rgba(58, 242, 160, 0.45);
+      color: #dbffee;
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-size: .92rem;
+      box-shadow: 0 10px 26px rgba(0,0,0,.4);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: .28s ease;
+      pointer-events: none;
     }
-    .panel-head:active { cursor: grabbing; }
-    .brand { font-family: Sora, Inter, sans-serif; font-weight: 700; font-size: .95rem; display: flex; gap: 8px; align-items: center; }
-    .collapse-btn { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.07); color: #fff; border-radius: 12px; width: 34px; height: 30px; cursor: pointer; }
-    .panel-body { padding: 14px; max-height: 76vh; overflow: auto; }
 
-    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; margin-bottom: 10px; }
-    .step-dot { text-align: center; padding: 8px 4px; border-radius: 10px; font-size: .7rem; color: var(--muted); background: rgba(255,255,255,.04); border: 1px solid transparent; cursor: pointer; }
-    .step-dot.active { color: #fff; background: rgba(115,164,255,.2); border-color: rgba(115,164,255,.7); }
-    .progress { height: 5px; border-radius: 99px; background: rgba(255,255,255,.08); margin: 8px 0 14px; overflow: hidden; }
-    .progress > i { display:block; height:100%; width:25%; background: linear-gradient(90deg, #73a4ff, #8f7cff, #f56fd1); transition: width .28s ease; }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
-    .step { display: none; }
-    .step.active { display: block; animation: fade .2s ease; }
-    @keyframes fade { from { opacity:0; transform: translateY(3px);} }
-
-    .label { font-size: .78rem; color: #dce3ff; margin: 8px 0; font-weight: 600; }
-    textarea {
-      width: 100%; min-height: 120px; resize: vertical; border-radius: 13px; border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06); color: #f6f8ff; padding: 12px; font: 500 .88rem/1.45 Plus Jakarta Sans, Inter, sans-serif;
+    @media (max-width: 980px) {
+      .slider-row { grid-template-columns: 1fr; gap: 8px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero { min-height: auto; }
+      .features { min-height: auto; }
     }
-    .char-row { display: flex; justify-content: space-between; color: var(--muted); font-size: .72rem; margin-top: 6px; }
 
-    .toggle-list { display: grid; gap: 8px; }
-    .toggle-item {
-      display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
-      padding: 10px; border: 1px solid rgba(255,255,255,.11); border-radius: 12px;
-      background: rgba(255,255,255,.04);
-    }
-    .toggle-title { font-size: .82rem; font-weight: 600; }
-    .toggle-sub { font-size: .7rem; color: var(--muted); }
-    .switch {
-      width: 46px; height: 26px; border-radius: 50px; border: 1px solid rgba(255,255,255,.2);
-      background: rgba(255,255,255,.12); position: relative; cursor: pointer;
-      transition: background .25s ease, border-color .25s ease;
-    }
-    .switch::after {
-      content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
-      background: #f7f9ff; transition: transform .25s cubic-bezier(.2,.8,.2,1);
-    }
-    .switch.on { background: linear-gradient(90deg, #73a4ff, #8f7cff); border-color: #9cc0ff; }
-    .switch.on::after { transform: translateX(20px); }
-    .toggle-item.current { border-color: rgba(143,124,255,.8); background: rgba(143,124,255,.15); }
-
-    .range-wrap { margin-bottom: 12px; }
-    .range-head { display:flex; justify-content:space-between; font-size:.76rem; color: var(--muted); margin-bottom: 7px; }
-    input[type=range] { width:100%; appearance:none; height: 8px; border-radius: 99px; outline:none; }
-    input[type=range].mood { background: linear-gradient(90deg, #76a9ff, #c386ff, #ff8ec3); }
-    input[type=range].density { background: linear-gradient(90deg, #81ffe2, #73a4ff, #8f7cff); }
-    input[type=range].temperature { background: linear-gradient(90deg, #4fb3ff, #8f7cff, #ff8a63); }
-    input[type=range]::-webkit-slider-thumb { appearance:none; width: 18px; height: 18px; border-radius:50%; border:2px solid #fff; background:#111; cursor:pointer; }
-
-    .actions { display:flex; gap:8px; flex-wrap: wrap; }
-    .btn {
-      flex:1; min-width: 130px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px;
-      padding: 10px; color:#fff; background: rgba(255,255,255,.08); cursor:pointer; font-weight: 600;
-      transition: transform .15s ease, background .2s ease;
-    }
-    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,.15); }
-    .btn.primary { background: linear-gradient(90deg, #73a4ff, #8f7cff); border-color: rgba(255,255,255,.35); }
-    .success { margin-top:10px; font-size:.82rem; color:#b8ffd8; display:none; }
-    .success.show { display:block; animation: pop .4s ease; }
-    @keyframes pop { 0%{ transform: scale(.96); opacity:0;} 100%{transform:scale(1); opacity:1;} }
-
-    .cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: calc(18px * var(--space-scale)); }
-    .card { padding: 20px; border-radius: var(--radius); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); }
-
-    #three-canvas, #particles-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
-    .hero-copy { position:relative; z-index:1; max-width: 630px; margin-top: 9vh; }
-
-    .glass-grid { display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:14px; }
-    .glass-card { padding: 18px; border-radius: 18px; border:1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.09); backdrop-filter: blur(18px) saturate(150%); }
-
-    .split { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .theme-box { border-radius: 16px; padding: 16px; min-height: 190px; border:1px solid rgba(255,255,255,.16); }
-    .theme-box.light { background: #f5f7ff; color: #111827; }
-    .theme-box.dark { background: #121523; color: #f2f7ff; }
-
-    .hero-ai { display:grid; grid-template-columns: 1.1fr 1fr; gap:16px; align-items:stretch; }
-    .hero-preview {
-      border-radius: 18px; overflow:hidden; min-height: 260px;
-      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.4), transparent 40%), linear-gradient(140deg, #3d4eff, #b85fff 40%, #ff8a63);
-      position: relative;
-    }
-    .hero-preview::after { content:""; position:absolute; inset:0; background: linear-gradient(180deg, transparent, rgba(0,0,0,.4)); }
-
-    .mockups { display:flex; gap:20px; align-items: end; flex-wrap: wrap; }
-    .device { background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.16); border-radius: 20px; padding: 10px; }
-
-    .micro-row { display:flex; gap:14px; flex-wrap: wrap; align-items:center; }
-    .ripple-btn { position:relative; overflow:hidden; }
-    .tilt { width:260px; padding:20px; border-radius: 16px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18); transform-style: preserve-3d; transition: transform .12s linear; }
-
-    .icons-wrap { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; }
-    .icon-card { padding: 14px; border:1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.03); }
-    .icon-row { display:flex; gap:10px; }
-    .icon { width: 22px; height: 22px; }
-
-    .floating-chip { position:absolute; right:18px; top:18px; font-size:.72rem; padding:5px 8px; border-radius: 99px; border:1px solid rgba(255,255,255,.2); background: rgba(0,0,0,.35); color:#e3ebff; }
-
-    @media (max-width: 960px) {
-      .floating-panel { right: 8px; left: 8px; top: auto; bottom: 8px; transform: none; width: auto; }
-      main { width: 94vw; padding-bottom: 45vh; }
-      .cards, .glass-grid, .hero-ai, .split, .icons-wrap { grid-template-columns: 1fr; }
+    @media (max-width: 640px) {
+      .wrap { width: min(95vw, 100%); }
+      .hero-panel { border-radius: 18px; padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      textarea { min-height: 150px; }
+      .sub { font-size: .98rem; }
     }
   </style>
 </head>
 <body>
-  <div class="page-bg"></div>
+  <main class="wrap">
+    <section class="hero" id="top">
+      <div class="hero-panel">
+        <h1>✨ StyleForge<br>Design System Generator</h1>
+        <p class="sub">Tell us about your project and we’ll create <strong>5 unique design directions</strong> tailored to you.</p>
 
-  <aside class="floating-panel" id="wizard">
-    <div class="panel-head" id="drag-handle">
-      <div class="brand">✨ StyleForge</div>
-      <button class="collapse-btn" id="collapse">—</button>
-    </div>
-    <div class="panel-body" id="panel-body">
-      <div class="steps" id="step-dots">
-        <button class="step-dot active" data-step="1">1 Context</button>
-        <button class="step-dot" data-step="2">2 Features</button>
-        <button class="step-dot" data-step="3">3 Style</button>
-        <button class="step-dot" data-step="4">4 Submit</button>
-      </div>
-      <div class="progress"><i id="progress-bar"></i></div>
-
-      <section class="step active" data-step="1">
-        <div class="label">Project Context</div>
-        <textarea id="project-context" maxlength="500" placeholder="We're building a SaaS platform that helps freelance video editors find clients and manage projects. Our target audience is creative professionals aged 25-40. We want to feel modern and trustworthy, not flashy. Think Linear meets Upwork."></textarea>
-        <div class="char-row"><span>Describe your product, audience, and tone.</span><span id="char-count">0/500</span></div>
-      </section>
-
-      <section class="step" data-step="2">
-        <div class="label">Feature Toggles</div>
-        <div class="toggle-list" id="feature-list"></div>
-      </section>
-
-      <section class="step" data-step="3">
-        <div class="label">Style Sliders</div>
-        <div class="range-wrap">
-          <div class="range-head"><span>Mood: Professional</span><span>Playful</span></div>
-          <input class="mood" id="mood" type="range" min="0" max="100" value="45" />
+        <div class="prompt-box">
+          <textarea id="projectPrompt" placeholder="Describe your project, audience, and the feeling you want your site to give people...&#10;&#10;Example: &quot;We're building a marketplace where freelance video editors can find clients. Target audience is creative professionals 25-40. We want modern and trustworthy, not flashy. Think Linear meets Upwork.&quot;"></textarea>
         </div>
-        <div class="range-wrap">
-          <div class="range-head"><span>Density: Spacious</span><span>Dense</span></div>
-          <input class="density" id="density" type="range" min="0" max="100" value="45" />
+
+        <div class="controls">
+          <div class="slider-row">
+            <label for="mood">Mood</label>
+            <div class="slider-wrap">
+              <span>🏢 Professional</span>
+              <input id="mood" type="range" min="0" max="100" value="50">
+              <span>Playful 🎨</span>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label for="density">Density</label>
+            <div class="slider-wrap">
+              <span>Spacious</span>
+              <input id="density" type="range" min="0" max="100" value="24">
+              <span>Dense</span>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label for="warmth">Warmth</label>
+            <div class="slider-wrap">
+              <span>Cool 🧊</span>
+              <input id="warmth" type="range" min="0" max="100" value="68">
+              <span>Warm 🔥</span>
+            </div>
+          </div>
         </div>
-        <div class="range-wrap">
-          <div class="range-head"><span>Temperature: Cool</span><span>Warm</span></div>
-          <input class="temperature" id="temperature" type="range" min="0" max="100" value="35" />
-        </div>
-      </section>
 
-      <section class="step" data-step="4">
-        <div class="label">Additional Notes</div>
-        <textarea id="notes" placeholder="Any specific brands, websites, or visual references you admire?"></textarea>
-        <div class="actions">
-          <button class="btn" id="copy-btn">📋 Copy Configuration</button>
-          <button class="btn primary" id="generate-btn">🚀 Generate My Designs</button>
-        </div>
-        <div class="success" id="success">✅ Configuration saved! Your designs are being crafted...</div>
-      </section>
-    </div>
-  </aside>
-
-  <main>
-    <section class="demo-section" id="feature-3dBackgrounds">
-      <canvas id="three-canvas"></canvas>
-      <div class="floating-chip">3D Backgrounds</div>
-      <div class="hero-copy">
-        <h2>Low-Poly 3D Atmosphere</h2>
-        <p class="lead">A subtle rotating wireframe icosphere that adapts color to your Warm/Cool slider for elegant depth.</p>
-      </div>
-    </section>
-
-    <section class="demo-section scroll-section" id="feature-scrollAnimations">
-      <div class="floating-chip">Scroll Animations</div>
-      <h2>GSAP Scroll Choreography</h2>
-      <p class="lead">Cards stagger into place with polished motion language and transform-only animations.</p>
-      <div class="cards" id="scroll-cards">
-        <article class="card demo-card">Frictionless onboarding flow</article>
-        <article class="card demo-card">Contextual tooltips & guidance</article>
-        <article class="card demo-card">Sticky conversion sections</article>
-        <article class="card demo-card">Trust-building testimonials</article>
-        <article class="card demo-card">Adaptive pricing narratives</article>
-        <article class="card demo-card">Action-oriented CTA cadence</article>
-      </div>
-    </section>
-
-    <section class="demo-section" id="feature-particleEffects">
-      <canvas id="particles-canvas"></canvas>
-      <div class="floating-chip">Particle Effects</div>
-      <h2>Ambient Particle Network</h2>
-      <p class="lead">A performant canvas field with proximity lines and dynamic hue control via temperature.</p>
-    </section>
-
-    <section class="demo-section" id="feature-glassmorphism">
-      <div class="floating-chip">Glassmorphism</div>
-      <h2>Frosted Interface Layers</h2>
-      <p class="lead">Refined glass cards over rich gradients for modern depth and premium texture.</p>
-      <div class="glass-grid">
-        <div class="glass-card"><strong>Analytics Overlay</strong><br/>Live KPI cards with frosted translucency.</div>
-        <div class="glass-card"><strong>Command Palette</strong><br/>Blurred utility surfaces with crisp hierarchy.</div>
-        <div class="glass-card"><strong>Smart Notifications</strong><br/>Non-intrusive updates with visual polish.</div>
-      </div>
-    </section>
-
-    <section class="demo-section" id="feature-darkModePriority">
-      <div class="floating-chip">Dark Mode Priority</div>
-      <h2>Dual Theme Preview</h2>
-      <p class="lead">Compare the same module in both light and dark mode for immediate style confidence.</p>
-      <div class="split">
-        <div class="theme-box light"><h3>Light Theme</h3><p>Clean surfaces, high readability, neutral accents.</p></div>
-        <div class="theme-box dark"><h3>Dark Theme</h3><p>Layered depth, luminous accents, cinematic contrast.</p></div>
-      </div>
-    </section>
-
-    <section class="demo-section" id="feature-aiHeroImages">
-      <div class="floating-chip">AI Hero Images</div>
-      <h2>AI Hero Art Direction</h2>
-      <p class="lead">Hero image treatment with cinematic gradients and copy overlays suitable for AI-assisted generation.</p>
-      <div class="hero-ai">
-        <div class="hero-preview"></div>
-        <div class="card"><h3 style="margin-top:0">Editorial Composition</h3><p>Use AI-generated visuals with controlled overlays for a branded, cohesive hero section that matches your palette and mood settings.</p></div>
-      </div>
-    </section>
-
-    <section class="demo-section" id="feature-deviceMockups">
-      <div class="floating-chip">Device Mockups</div>
-      <h2>Inline SVG Device Mockups</h2>
-      <p class="lead">Phone + laptop compositions with editable fills for landing page realism.</p>
-      <div class="mockups">
-        <div class="device">
-          <svg width="160" height="320" viewBox="0 0 160 320" fill="none">
-            <rect x="8" y="6" width="144" height="308" rx="30" fill="#0f1325" stroke="#8ea4ff"/>
-            <rect x="20" y="26" width="120" height="268" rx="18" fill="url(#pg)"/>
-            <rect x="62" y="14" width="36" height="6" rx="3" fill="#202743"/>
-            <defs><linearGradient id="pg" x1="20" y1="26" x2="140" y2="294"><stop stop-color="#73A4FF"/><stop offset="1" stop-color="#FF8A63"/></linearGradient></defs>
-          </svg>
-        </div>
-        <div class="device">
-          <svg width="330" height="210" viewBox="0 0 330 210" fill="none">
-            <rect x="22" y="14" width="286" height="168" rx="12" fill="#0f1325" stroke="#a1b8ff"/>
-            <rect x="34" y="26" width="262" height="132" rx="8" fill="url(#lg)"/>
-            <rect x="0" y="182" width="330" height="16" rx="8" fill="#1a2038"/>
-            <defs><linearGradient id="lg" x1="34" y1="26" x2="296" y2="158"><stop stop-color="#7f6dff"/><stop offset="1" stop-color="#39d88f"/></linearGradient></defs>
-          </svg>
+        <div class="cta-row">
+          <button class="cta" id="generateBtn">✨ Generate My Designs →</button>
+          <div class="hint">↓ Want more control? Customize features below</div>
         </div>
       </div>
     </section>
 
-    <section class="demo-section" id="feature-microInteractions">
-      <div class="floating-chip">Micro-interactions</div>
-      <h2>Micro-interaction Details</h2>
-      <p class="lead">Buttons with tactile feedback, ripple on click, and cursor-responsive card tilt.</p>
-      <div class="micro-row">
-        <button class="btn primary ripple-btn" id="ripple">Launch Experience</button>
-        <button class="btn">Secondary Action</button>
-        <div class="tilt" id="tilt-card">Hover me: this card tilts with cursor movement for subtle delight.</div>
-      </div>
-    </section>
+    <section class="features" id="features">
+      <h2>Optional: Fine-tune your experience</h2>
+      <p>Enable only what you need. Everything is lightweight and production-minded.</p>
 
-    <section class="demo-section" id="feature-customIconStyle">
-      <div class="floating-chip">Custom Icon Style</div>
-      <h2>Outlined vs Filled vs Duotone</h2>
-      <p class="lead">Three SVG icon styles for brand personality control.</p>
-      <div class="icons-wrap">
-        <div class="icon-card"><strong>Outlined</strong><div class="icon-row">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="13" height="12" rx="2"/><path d="M16 9l5-3v12l-5-3"/></svg>
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 14h16"/><path d="M7 10h10"/><rect x="3" y="4" width="18" height="16" rx="3"/></svg>
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
-        </div></div>
-        <div class="icon-card"><strong>Filled</strong><div class="icon-row">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="13" height="12" rx="2"/><path d="M16 9l5-3v12l-5-3" opacity=".75"/></svg>
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M4 14h16" fill="#090b12"/></svg>
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2" fill="#090b12"/></svg>
-        </div></div>
-        <div class="icon-card"><strong>Duotone</strong><div class="icon-row">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="12" rx="2" fill="#73A4FF"/><path d="M16 9l5-3v12l-5-3" fill="#FF8A63"/></svg>
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="#8F7CFF"/><path d="M4 14h16" stroke="#fff"/></svg>
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#39D88F"/><path d="M12 8v4l3 2" stroke="#0b1021" stroke-width="2" fill="none"/></svg>
-        </div></div>
-      </div>
+      <div class="grid" id="featureGrid"></div>
     </section>
   </main>
 
-  <script src="https://unpkg.com/three@0.170.0/build/three.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js" defer></script>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
     const features = [
-      { key: '3dBackgrounds', label: '3D Backgrounds', sub:'Three.js wireframe hero', section: 'feature-3dBackgrounds', enabled: true },
-      { key: 'scrollAnimations', label: 'Scroll Animations', sub:'GSAP stagger effects', section: 'feature-scrollAnimations', enabled: true },
-      { key: 'particleEffects', label: 'Particle Effects', sub:'Canvas proximity network', section: 'feature-particleEffects', enabled: true },
-      { key: 'glassmorphism', label: 'Glassmorphism', sub:'Frosted translucent layers', section: 'feature-glassmorphism', enabled: true },
-      { key: 'darkModePriority', label: 'Dark Mode Priority', sub:'Light/dark live compare', section: 'feature-darkModePriority', enabled: true },
-      { key: 'aiHeroImages', label: 'AI Hero Images', sub:'Generated visual direction', section: 'feature-aiHeroImages', enabled: true },
-      { key: 'deviceMockups', label: 'Device Mockups', sub:'Inline SVG frames', section: 'feature-deviceMockups', enabled: true },
-      { key: 'microInteractions', label: 'Micro-interactions', sub:'Ripple + tilt + hover', section: 'feature-microInteractions', enabled: true },
-      { key: 'customIconStyle', label: 'Custom Icon Style', sub:'Outlined/Filled/Duotone', section: 'feature-customIconStyle', enabled: true }
+      { key: 'threeD', icon: '🧊', name: '3D', desc: 'Add subtle depth accents for premium visual hierarchy.', demo: 'demo-3d', on: true },
+      { key: 'scroll', icon: '🌀', name: 'Scroll Effects', desc: 'Gentle movement tied to page scroll and reveal timing.', demo: 'demo-scroll', on: true },
+      { key: 'particle', icon: '✨', name: 'Particle Fields', desc: 'Soft ambient particles to add atmosphere without noise.', demo: 'demo-particle', on: false },
+      { key: 'glass', icon: '🪟', name: 'Glass Surfaces', desc: 'Frosted panels for layered, modern UI composition.', demo: 'demo-glass', on: true },
+      { key: 'darkMode', icon: '🌙', name: 'Dark Mode', desc: 'Auto-ready dark palette tuning with contrast protection.', demo: 'demo-dark', on: true },
+      { key: 'mockups', icon: '📱', name: 'Device Mockups', desc: 'Showcase-ready frame previews for hero and case studies.', demo: 'demo-device', on: false },
+      { key: 'micro', icon: '⚡', name: 'Micro-interactions', desc: 'Small feedback animations that improve clarity and delight.', demo: 'demo-micro', on: true },
+      { key: 'icons', icon: '🔷', name: 'Custom Icons', desc: 'Distinct icon style suggestions matched to your brand tone.', demo: 'demo-icons', on: false },
+      { key: 'heroImages', icon: '🖼️', name: 'Hero Images', desc: 'Cinematic hero imagery direction aligned to your message.', demo: 'demo-hero', on: true }
     ];
 
-    const state = {
-      projectContext: '', notes: '',
-      style: { mood: .45, density: .45, temperature: .35 },
-      features: Object.fromEntries(features.map(f => [f.key, f.enabled]))
-    };
+    const grid = document.getElementById('featureGrid');
+    const toast = document.getElementById('toast');
 
-    const wizard = document.getElementById('wizard');
-    const steps = [...document.querySelectorAll('.step')];
-    const dots = [...document.querySelectorAll('.step-dot')];
-    const progress = document.getElementById('progress-bar');
-
-    let activeStep = 1;
-    function setStep(step) {
-      activeStep = step;
-      steps.forEach(s => s.classList.toggle('active', +s.dataset.step === step));
-      dots.forEach(d => d.classList.toggle('active', +d.dataset.step === step));
-      progress.style.width = `${step * 25}%`;
+    function cardTemplate(feature) {
+      return `
+        <article class="card ${feature.on ? '' : 'off'}" data-key="${feature.key}">
+          <div class="top">
+            <div class="name"><span class="icon">${feature.icon}</span>${feature.name}</div>
+            <label class="switch" aria-label="Toggle ${feature.name}">
+              <input type="checkbox" ${feature.on ? 'checked' : ''}>
+              <span class="track"></span>
+            </label>
+          </div>
+          <p class="desc">${feature.desc}</p>
+          <div class="demo ${feature.demo}" aria-hidden="true"></div>
+        </article>
+      `;
     }
-    dots.forEach(d => d.addEventListener('click', () => setStep(+d.dataset.step)));
 
-    const featureList = document.getElementById('feature-list');
-    features.forEach(f => {
-      const row = document.createElement('div');
-      row.className = 'toggle-item';
-      row.dataset.section = f.section;
-      row.innerHTML = `<div><div class="toggle-title">${f.label}</div><div class="toggle-sub">${f.sub}</div></div><button class="switch on" role="switch" aria-checked="true"></button>`;
-      const sw = row.querySelector('.switch');
-      sw.addEventListener('click', () => {
-        state.features[f.key] = !state.features[f.key];
-        sw.classList.toggle('on', state.features[f.key]);
-        sw.setAttribute('aria-checked', String(state.features[f.key]));
-        const section = document.getElementById(f.section);
-        section.classList.toggle('is-disabled', !state.features[f.key]);
-        if (state.features[f.key]) section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        if (f.key === '3dBackgrounds') updateThreeRunning();
-        if (f.key === 'particleEffects') updateParticleRunning();
+    grid.innerHTML = features.map(cardTemplate).join('');
+
+    grid.addEventListener('change', (event) => {
+      const checkbox = event.target;
+      if (checkbox.matches('input[type="checkbox"]')) {
+        const card = checkbox.closest('.card');
+        card.classList.toggle('off', !checkbox.checked);
+      }
+    });
+
+    const sliders = ['mood', 'density', 'warmth'].map(id => document.getElementById(id));
+
+    function getPayload() {
+      const featureState = {};
+      document.querySelectorAll('.card').forEach(card => {
+        featureState[card.dataset.key] = !!card.querySelector('input').checked;
       });
-      featureList.appendChild(row);
-    });
 
-    // Intersection highlight
-    const itemBySection = Object.fromEntries([...featureList.children].map(el => [el.dataset.section, el]));
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          Object.values(itemBySection).forEach(i => i.classList.remove('current'));
-          itemBySection[e.target.id]?.classList.add('current');
-        }
-      });
-    }, { threshold: .45 });
-    document.querySelectorAll('.demo-section').forEach(sec => io.observe(sec));
-
-    // Step 1 / 3 bindings
-    const contextEl = document.getElementById('project-context');
-    const charCount = document.getElementById('char-count');
-    contextEl.addEventListener('input', () => {
-      state.projectContext = contextEl.value;
-      charCount.textContent = `${contextEl.value.length}/500`;
-    });
-    ['mood','density','temperature'].forEach(k => {
-      const el = document.getElementById(k);
-      el.addEventListener('input', () => {
-        state.style[k] = +el.value / 100;
-        document.documentElement.style.setProperty('--' + (k === 'temperature' ? 'temp' : k), state.style[k]);
-        if (k === 'temperature') {
-          updateHeatColor();
-        }
-      });
-    });
-
-    // Copy + generate
-    document.getElementById('copy-btn').addEventListener('click', async () => {
-      const payload = buildConfig();
-      await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-      const s = document.getElementById('success');
-      s.textContent = '✅ Configuration copied to clipboard.';
-      s.classList.add('show');
-      setTimeout(() => s.classList.remove('show'), 2200);
-    });
-    document.getElementById('generate-btn').addEventListener('click', () => {
-      const s = document.getElementById('success');
-      s.textContent = '✅ Configuration saved! Your designs are being crafted...';
-      s.classList.add('show');
-      wizard.animate([
-        { transform: wizard.style.transform || 'translateY(-50%) scale(1)' },
-        { transform: (wizard.style.transform || 'translateY(-50%)') + ' scale(1.02)' },
-        { transform: wizard.style.transform || 'translateY(-50%) scale(1)' }
-      ], { duration: 420, easing: 'ease-out' });
-    });
-
-    function buildConfig() {
       return {
-        project: { description: state.projectContext, submittedAt: new Date().toISOString() },
-        features: { ...state.features },
-        style: { ...state.style },
-        notes: document.getElementById('notes').value
+        stage: 'styleforge-stage1-v2',
+        generatedAt: new Date().toISOString(),
+        projectPrompt: document.getElementById('projectPrompt').value.trim(),
+        sliders: {
+          mood: Number(sliders[0].value),
+          density: Number(sliders[1].value),
+          warmth: Number(sliders[2].value)
+        },
+        features: featureState
       };
     }
 
-    // Drag + collapse
-    (function setupDrag() {
-      const handle = document.getElementById('drag-handle');
-      const collapse = document.getElementById('collapse');
-      collapse.addEventListener('click', () => wizard.classList.toggle('collapsed'));
-      let drag = false, ox = 0, oy = 0;
-      handle.addEventListener('pointerdown', (e) => {
-        if (window.innerWidth <= 960) return;
-        drag = true;
-        const r = wizard.getBoundingClientRect();
-        ox = e.clientX - r.left; oy = e.clientY - r.top;
-        wizard.style.left = r.left + 'px'; wizard.style.top = r.top + 'px'; wizard.style.right = 'auto'; wizard.style.transform = 'none';
-        handle.setPointerCapture(e.pointerId);
-      });
-      window.addEventListener('pointermove', (e) => {
-        if (!drag) return;
-        const x = Math.min(window.innerWidth - wizard.offsetWidth - 8, Math.max(8, e.clientX - ox));
-        const y = Math.min(window.innerHeight - wizard.offsetHeight - 8, Math.max(8, e.clientY - oy));
-        wizard.style.left = x + 'px'; wizard.style.top = y + 'px';
-      });
-      window.addEventListener('pointerup', () => drag = false);
-    })();
-
-    // GSAP scroll cards
-    window.addEventListener('load', () => {
-      if (window.gsap && window.ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.from('.demo-card', {
-          y: 56, opacity: 0, duration: .75, stagger: .13, ease: 'power2.out',
-          scrollTrigger: { trigger: '#feature-scrollAnimations', start: 'top 72%' }
-        });
+    async function copyPayload(payload) {
+      const text = JSON.stringify(payload, null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('✅ Configuration copied to clipboard. Ready for generation.');
+      } catch {
+        showToast('⚠️ Clipboard blocked. JSON logged to console.');
+        console.log(text);
       }
-      initThreeLazy();
-      initParticles();
-      setupTilt();
-      setupRipple();
-      setStep(1);
+    }
+
+    let toastTimer;
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const payload = getPayload();
+      if (!payload.projectPrompt) {
+        showToast('Please describe your project first ✍️');
+        document.getElementById('projectPrompt').focus();
+        return;
+      }
+      copyPayload(payload);
     });
-
-    // Three.js (lazy init + visibility pause)
-    let three = { inited:false, visible:false, raf:0, mesh:null, scene:null, cam:null, renderer:null };
-    function initThreeLazy() {
-      const host = document.getElementById('feature-3dBackgrounds');
-      const observer = new IntersectionObserver((entries) => {
-        const e = entries[0];
-        three.visible = e.isIntersecting;
-        if (e.isIntersecting && !three.inited) startThree();
-        updateThreeRunning();
-      }, { threshold: .18 });
-      observer.observe(host);
-    }
-    function tempColor() {
-      const t = state.style.temperature;
-      const cool = [79,179,255], warm = [255,138,99];
-      const mix = cool.map((c, i) => Math.round(c + (warm[i]-c) * t));
-      return (mix[0] << 16) | (mix[1] << 8) | mix[2];
-    }
-    function startThree() {
-      const canvas = document.getElementById('three-canvas');
-      three.scene = new THREE.Scene();
-      three.cam = new THREE.PerspectiveCamera(48, canvas.clientWidth / canvas.clientHeight, .1, 100);
-      three.cam.position.z = 5;
-      three.renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
-      three.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      three.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-      const geo = new THREE.IcosahedronGeometry(1.75, 2);
-      const mat = new THREE.MeshPhongMaterial({ color: tempColor(), wireframe: true, transparent: true, opacity: .52 });
-      three.mesh = new THREE.Mesh(geo, mat);
-      three.scene.add(three.mesh);
-      const light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(1.5, 2.4, 3); three.scene.add(light);
-      three.scene.add(new THREE.AmbientLight(0xffffff, .35));
-      window.addEventListener('resize', () => {
-        if (!three.renderer) return;
-        three.cam.aspect = canvas.clientWidth / canvas.clientHeight;
-        three.cam.updateProjectionMatrix();
-        three.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-      });
-      three.inited = true;
-      updateThreeRunning();
-    }
-    function threeTick() {
-      if (!three.inited) return;
-      three.mesh.rotation.y += .004;
-      three.mesh.rotation.x += .002;
-      three.renderer.render(three.scene, three.cam);
-      three.raf = requestAnimationFrame(threeTick);
-    }
-    function updateThreeRunning() {
-      const should = three.inited && three.visible && state.features['3dBackgrounds'];
-      if (should && !three.raf) threeTick();
-      if (!should && three.raf) { cancelAnimationFrame(three.raf); three.raf = 0; }
-    }
-    function updateHeatColor() {
-      if (three.mesh) three.mesh.material.color.setHex(tempColor());
-      particles.hue = Math.round(200 - 170 * state.style.temperature);
-    }
-
-    // Particle canvas (pause when offscreen)
-    const particles = { arr:[], raf:0, visible:false, ctx:null, canvas:null, hue:140 };
-    function initParticles() {
-      particles.canvas = document.getElementById('particles-canvas');
-      particles.ctx = particles.canvas.getContext('2d');
-      resizeParticles();
-      for (let i=0;i<80;i++) particles.arr.push({ x:Math.random()*particles.canvas.width, y:Math.random()*particles.canvas.height, vx:(Math.random()-.5)*.6, vy:(Math.random()-.5)*.6 });
-      const ob = new IntersectionObserver((entries)=>{
-        particles.visible = entries[0].isIntersecting;
-        updateParticleRunning();
-      }, { threshold:.18 });
-      ob.observe(document.getElementById('feature-particleEffects'));
-      window.addEventListener('resize', resizeParticles);
-    }
-    function resizeParticles(){
-      const c = particles.canvas; if(!c) return;
-      c.width = c.clientWidth * Math.min(devicePixelRatio, 2);
-      c.height = c.clientHeight * Math.min(devicePixelRatio, 2);
-      particles.ctx.setTransform(Math.min(devicePixelRatio,2),0,0,Math.min(devicePixelRatio,2),0,0);
-    }
-    function particleTick(){
-      const {ctx,canvas,arr} = particles; if(!ctx) return;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      for (const p of arr){ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>canvas.clientWidth)p.vx*=-1; if(p.y<0||p.y>canvas.clientHeight)p.vy*=-1; }
-      for (let i=0;i<arr.length;i++){
-        const a = arr[i];
-        ctx.fillStyle = `hsla(${particles.hue},90%,68%,.8)`;
-        ctx.beginPath(); ctx.arc(a.x,a.y,1.8,0,Math.PI*2); ctx.fill();
-        for (let j=i+1;j<arr.length;j++){
-          const b = arr[j], dx=a.x-b.x, dy=a.y-b.y, d=Math.hypot(dx,dy);
-          if (d<120){ ctx.strokeStyle = `hsla(${particles.hue},90%,65%,${(1-d/120)*.2})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
-        }
-      }
-      particles.raf = requestAnimationFrame(particleTick);
-    }
-    function updateParticleRunning(){
-      const should = particles.visible && state.features.particleEffects;
-      if (should && !particles.raf) particleTick();
-      if (!should && particles.raf) { cancelAnimationFrame(particles.raf); particles.raf = 0; }
-    }
-
-    function setupTilt(){
-      const c = document.getElementById('tilt-card');
-      c.addEventListener('mousemove', (e)=>{
-        const r = c.getBoundingClientRect();
-        const px = (e.clientX-r.left)/r.width - .5;
-        const py = (e.clientY-r.top)/r.height - .5;
-        c.style.transform = `perspective(700px) rotateX(${(-py*7).toFixed(2)}deg) rotateY(${(px*9).toFixed(2)}deg)`;
-      });
-      c.addEventListener('mouseleave', ()=> c.style.transform = 'perspective(700px) rotateX(0deg) rotateY(0deg)');
-    }
-    function setupRipple(){
-      const btn = document.getElementById('ripple');
-      btn.addEventListener('click', (e)=>{
-        const s = document.createElement('span');
-        const r = btn.getBoundingClientRect();
-        s.style.position='absolute'; s.style.left = (e.clientX-r.left)+'px'; s.style.top = (e.clientY-r.top)+'px'; s.style.width='8px'; s.style.height='8px'; s.style.borderRadius='50%'; s.style.background='rgba(255,255,255,.7)'; s.style.transform='translate(-50%,-50%) scale(1)'; s.style.opacity='1'; s.style.pointerEvents='none';
-        btn.appendChild(s);
-        s.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(-50%,-50%) scale(24)',opacity:0}],{duration:580,easing:'ease-out'}).onfinish=()=>s.remove();
-      });
-    }
   </script>
 </body>
 </html>
